@@ -3,7 +3,7 @@
 block_cipher = None
 
 a = Analysis(
-    ['main.py'],  # Replace 'main.py' with the path to your main script
+    ['LabAI.py'],  # Replace 'main.py' with the path to your main script
     pathex=[],
     binaries=[],
     datas=[],
