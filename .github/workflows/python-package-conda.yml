@@ -123,6 +123,15 @@ jobs:
         name: LabAI-macos
         path: artifacts/macos
 
+    - name: List Downloaded Files - Ubuntu
+      run: ls -l artifacts/ubuntu
+
+    - name: List Downloaded Files - Windows
+      run: ls -l artifacts/windows
+
+    - name: List Downloaded Files - macOS
+      run: ls -l artifacts/macos
+
     - name: Create GitHub Release
       uses: softprops/action-gh-release@v2
       with:
