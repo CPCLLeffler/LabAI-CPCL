@@ -2,21 +2,19 @@ name: Build and Release LabAI
 
 on:
   push:
-    tags:
-      - "v*.*.*"  # Only create a release for tags with this pattern
+    branches:
+      - main  # Change this to the branch you want to trigger the workflow on
+  pull_request:
+    branches:
+      - main  # Change this to the branch you want to trigger the workflow on
 
 jobs:
-  build:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
-
+  build-and-release-ubuntu:
+    runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
 
-    # Install dependencies and build for each OS
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
@@ -34,40 +32,89 @@ jobs:
     - name: Upload Artifact
       uses: actions/upload-artifact@v2
       with:
-        name: LabAI-${{ matrix.os }}
+        name: LabAI-ubuntu
         path: ./dist
 
-  release:
-    needs: build  # This ensures that the release job runs after the build job
-    runs-on: ubuntu-latest
+    - name: Create GitHub Release
+      if: github.event_name == 'push'
+      uses: softprops/action-gh-release@v2
+      with:
+        files: dist/*
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  build-and-release-windows:
+    runs-on: windows-latest
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
 
-    - name: Download Artifacts - Ubuntu
-      uses: actions/download-artifact@v2
+    - name: Set up Python
+      uses: actions/setup-python@v2
       with:
-        name: LabAI-ubuntu-latest
-        path: artifacts/ubuntu-latest
+        python-version: '3.12'
 
-    - name: Download Artifacts - Windows
-      uses: actions/download-artifact@v2
-      with:
-        name: LabAI-windows-latest
-        path: artifacts/windows-latest
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r .github/workflows/requirements.txt
 
-    - name: Download Artifacts - macOS
-      uses: actions/download-artifact@v2
+    - name: Create Executable
+      run: |
+        pyinstaller --onefile --name "LabAI" --windowed .github/workflows/spec.spec
+
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v2
       with:
-        name: LabAI-macos-latest
-        path: artifacts/macos-latest
+        name: LabAI-windows
+        path: ./dist
 
     - name: Create GitHub Release
+      if: github.event_name == 'push'
       uses: softprops/action-gh-release@v2
       with:
-        files: |
-          artifacts/ubuntu-latest/*
-          artifacts/windows-latest/*
-          artifacts/macos-latest/*
+        files: dist/*
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  build-and-release-macos:
+    runs-on: macos-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Install gettext
+      run: brew install gettext
+      shell: bash
+
+    - name: Add gettext to PATH
+      run: echo "/usr/local/opt/gettext/bin" >> $GITHUB_PATH
+      shell: bash
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.12'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r .github/workflows/requirements.txt
+
+    - name: Create Executable
+      run: |
+        pyinstaller --onefile --name "LabAI" --windowed .github/workflows/spec.spec
+
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: LabAI-macos
+        path: ./dist
+
+    - name: Create GitHub Release
+      if: github.event_name == 'push'
+      uses: softprops/action-gh-release@v2
+      with:
+        files: dist/*
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
