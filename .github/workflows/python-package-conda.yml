@@ -40,7 +40,7 @@ jobs:
       if: github.event_name == 'push'
       uses: softprops/action-gh-release@v2
       with:
-        tag_name: ${{ github.sha }}  # Use the commit SHA as the tag name
+        tag_name: "Releases"  # Use the commit SHA as the tag name
         files: dist/*
       env:
         GITHUB_TOKEN: ${{ secrets.TOKEN }}
@@ -76,7 +76,7 @@ jobs:
       if: github.event_name == 'push'
       uses: softprops/action-gh-release@v2
       with:
-        tag_name: ${{ github.sha }}  # Use the commit SHA as the tag name
+        tag_name: "Releases"  # Use the commit SHA as the tag name
         files: dist/*
       env:
         GITHUB_TOKEN: ${{ secrets.TOKEN }}
@@ -120,7 +120,7 @@ jobs:
       if: github.event_name == 'push'
       uses: softprops/action-gh-release@v2
       with:
-        tag_name: ${{ github.sha }}  # Use the commit SHA as the tag name
+        tag_name: "Releases" # Use the commit SHA as the tag name
         files: dist/*
       env:
         GITHUB_TOKEN: ${{ secrets.TOKEN }}
