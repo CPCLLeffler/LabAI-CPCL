@@ -167,19 +167,19 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: LabAI-ubuntu
-          path: ./LabAI-ubuntu.zip
+          path: ./
 
       - name: Download Artifact - Windows
         uses: actions/download-artifact@v2
         with:
           name: LabAI-windows
-          path: ./LabAI-windows.zip
+          path: ./
 
       - name: Download Artifact - macOS
         uses: actions/download-artifact@v2
         with:
           name: LabAI-macos
-          path: ./LabAI-macos.zip
+          path: ./
 
       - name: Upload Release Asset - Ubuntu
         uses: actions/upload-release-asset@v1
@@ -187,7 +187,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./
+          asset_path: ./LabAI-ubuntu.zip
           asset_name: LabAI-ubuntu-${{ env.RELEASE_TIME }}.zip
           asset_content_type: application/zip
 
@@ -197,7 +197,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./
+          asset_path: ./LabAI-windows.zip
           asset_name: LabAI-windows-${{ env.RELEASE_TIME }}.zip
           asset_content_type: application/zip
 
@@ -207,6 +207,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./
+          asset_path: ./LabAI-macos.zip
           asset_name: LabAI-macos-${{ env.RELEASE_TIME }}.zip
           asset_content_type: application/zip
