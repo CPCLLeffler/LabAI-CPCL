@@ -23,11 +23,11 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -r .github/workflows/requirements.txt
+        pip install -r requirements.txt
 
     - name: Create Executable
       run: |
-        pyinstaller --onefile --name "LabAI" --windowed .github/workflows/spec.spec
+        pyinstaller --onefile --name "LabAI" --windowed spec.spec
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v2
@@ -57,11 +57,11 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -r .github/workflows/requirements.txt
+        pip install -r requirements.txt
 
     - name: Create Executable
       run: |
-        pyinstaller --onefile --name "LabAI" --windowed .github/workflows/spec.spec
+        pyinstaller --onefile --name "LabAI" --windowed spec.spec
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v2
@@ -99,11 +99,11 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -r .github/workflows/requirements.txt
+        pip install -r requirements.txt
 
     - name: Create Executable
       run: |
-        pyinstaller --onefile --name "LabAI" --windowed .github/workflows/spec.spec
+        pyinstaller --onefile --name "LabAI" --windowed spec.spec
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v2
