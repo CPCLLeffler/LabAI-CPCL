@@ -43,7 +43,7 @@ jobs:
         tag_name: ${{ github.sha }}  # Use the commit SHA as the tag name
         files: dist/*
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.TOKEN }}
 
   build-and-release-windows:
     runs-on: windows-latest
@@ -79,7 +79,7 @@ jobs:
         tag_name: ${{ github.sha }}  # Use the commit SHA as the tag name
         files: dist/*
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.TOKEN }}
 
   build-and-release-macos:
     runs-on: macos-latest
@@ -123,4 +123,4 @@ jobs:
         tag_name: ${{ github.sha }}  # Use the commit SHA as the tag name
         files: dist/*
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.TOKEN }}
