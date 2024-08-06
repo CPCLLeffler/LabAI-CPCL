@@ -182,7 +182,7 @@ jobs:
       uses: actions/upload-release-asset@v1
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: artifacts/ubuntu/*
+        asset_path: /home/runner/work/LabAI-CPCL/LabAI-CPCL/artifacts/ubuntu/*
         asset_name: LabAI-ubuntu-${{ env.RELEASE_TIME }}
         asset_content_type: application/zip
 
@@ -190,7 +190,7 @@ jobs:
       uses: actions/upload-release-asset@v1
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: artifacts/windows/*
+        asset_path: /home/runner/work/LabAI-CPCL/LabAI-CPCL/artifacts/windows/*
         asset_name: LabAI-windows-${{ env.RELEASE_TIME }}
         asset_content_type: application/zip
 
@@ -198,6 +198,6 @@ jobs:
       uses: actions/upload-release-asset@v1
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: artifacts/macos/*
+        asset_path: /home/runner/work/LabAI-CPCL/LabAI-CPCL/artifacts/macos/*
         asset_name: LabAI-macos-${{ env.RELEASE_TIME }}
         asset_content_type: application/zip
