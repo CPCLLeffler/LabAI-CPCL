@@ -28,10 +28,11 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
     - name: Install gettext
-      run: brew install gettext
+      run: brew reinstall gettext
+
 
     - name: Link gettext
-      run: brew link --force gettext
+      run: brew unlink gettext && brew link gettext
 
     - name: Create Executable
       uses: sayyid5416/pyinstaller@v1
