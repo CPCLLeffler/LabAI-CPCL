@@ -154,6 +154,24 @@ jobs:
           draft: false
           prerelease: false
 
+      - name: Download Artifact - Ubuntu
+        uses: actions/download-artifact@v2
+        with:
+          name: LabAI-ubuntu
+          path: ./LabAI-ubuntu
+
+      - name: Download Artifact - Windows
+        uses: actions/download-artifact@v2
+        with:
+          name: LabAI-windows
+          path: ./LabAI-windows
+
+      - name: Download Artifact - macOS
+        uses: actions/download-artifact@v2
+        with:
+          name: LabAI-macos
+          path: ./LabAI-macos
+
       - name: Upload Release Asset - Ubuntu
         uses: actions/upload-release-asset@v1
         env:
@@ -161,7 +179,7 @@ jobs:
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ./LabAI-ubuntu
-          asset_name: LabAI-ubuntu-${{ env.RELEASE_TIME }}
+          asset_name: LabAI-ubuntu-${{ env.RELEASE_TIME }}.zip
           asset_content_type: application/zip
 
       - name: Upload Release Asset - Windows
@@ -171,7 +189,7 @@ jobs:
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ./LabAI-windows
-          asset_name: LabAI-windows-${{ env.RELEASE_TIME }}
+          asset_name: LabAI-windows-${{ env.RELEASE_TIME }}.zip
           asset_content_type: application/zip
 
       - name: Upload Release Asset - macOS
@@ -181,5 +199,5 @@ jobs:
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ./LabAI-macos
-          asset_name: LabAI-macos-${{ env.RELEASE_TIME }}
+          asset_name: LabAI-macos-${{ env.RELEASE_TIME }}.zip
           asset_content_type: application/zip
