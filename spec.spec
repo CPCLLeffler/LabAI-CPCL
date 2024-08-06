@@ -1,10 +1,10 @@
-# -- mode python ; coding utf-8 --
+# -*- mode: python ; coding: utf-8 -*-
 
 block_cipher = None
 
 a = Analysis(
-    ['LabAI.py'],
-    pathex=['/LabAI.py'],
+    ['main.py'],  # Replace 'main.py' with the path to your main script
+    pathex=[],
     binaries=[],
     datas=[],
     hiddenimports=[],
@@ -16,6 +16,7 @@ a = Analysis(
     cipher=block_cipher,
     noarchive=False,
 )
+
 pyz = PYZ(a.pure, a.zipped_data, cipher=block_cipher)
 
 exe = EXE(
@@ -30,7 +31,7 @@ exe = EXE(
     upx=True,
     upx_exclude=[],
     runtime_tmpdir=None,
-    console=True,  # Change to False if you want a windowed application
+    console=True  # Change to False if you want a windowed application
 )
 
 coll = COLLECT(
@@ -41,5 +42,5 @@ coll = COLLECT(
     strip=False,
     upx=True,
     upx_exclude=[],
-    name='LabAI',
+    name='LabAI'
 )
