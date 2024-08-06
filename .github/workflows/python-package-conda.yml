@@ -28,7 +28,7 @@ jobs:
 
     - name: Create Executable
       run: |
-        pyinstaller --onefile --name "LabAI" --windowed spec.spec
+        pyinstaller spec.spec
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v2
@@ -63,7 +63,7 @@ jobs:
 
     - name: Create Executable
       run: |
-        pyinstaller --onefile --name "LabAI" --windowed spec.spec
+        pyinstaller spec.spec
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v2
@@ -106,7 +106,7 @@ jobs:
 
     - name: Create Executable
       run: |
-        pyinstaller --onefile --name "LabAI" --windowed spec.spec
+        pyinstaller spec.spec
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v2
