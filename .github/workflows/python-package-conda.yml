@@ -38,9 +38,6 @@ jobs:
       run: |
         pyinstaller spec.spec
 
-    - name: List Files in Dist
-      run: ls -la ./dist
-
     - name: Upload Artifact
       uses: actions/upload-artifact@v2
       with:
@@ -75,10 +72,7 @@ jobs:
     - name: Create Executable
       run: |
         pyinstaller spec.spec
-
-    - name: List Files in Dist
-      run: ls -la ./dist
-
+        
     - name: Upload Artifact
       uses: actions/upload-artifact@v2
       with:
@@ -121,9 +115,6 @@ jobs:
     - name: Create Executable
       run: |
         pyinstaller spec.spec
-
-    - name: List Files in Dist
-      run: ls -la ./dist
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v2
