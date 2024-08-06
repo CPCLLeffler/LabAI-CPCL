@@ -21,7 +21,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
-        python-version: '3.10'
+        python-version: '3.12'
 
     - name: Install dependencies
       run: |
@@ -37,11 +37,11 @@ jobs:
     - name: Create Executable
       uses: sayyid5416/pyinstaller@v1
       with:
-        python_ver: '3.10'
+        python_ver: '3.12'
         spec: 'spec.spec'
         requirements: 'requirements.txt'
         upload_exe_with_name: 'LabAI-macos'
-        options: --onefile, --name "LabAI", --console # --windowed ensures no console
+        options: --name "LabAI", --console # --windowed ensures no console
 
     - name: Upload artifact
       uses: actions/upload-artifact@v2
@@ -59,7 +59,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
-        python-version: '3.10'
+        python-version: '3.12'
 
     - name: Install dependencies
       run: |
@@ -68,7 +68,7 @@ jobs:
     - name: Create Executable
       uses: sayyid5416/pyinstaller@v1
       with:
-        python_ver: '3.10'
+        python_ver: '3.12'
         spec: 'spec.spec'
         requirements: 'requirements.txt'
         upload_exe_with_name: 'LabAI-linux'
@@ -90,7 +90,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
-        python-version: '3.10'
+        python-version: '3.12'
 
     - name: Install dependencies
       run: |
@@ -99,7 +99,7 @@ jobs:
     - name: Create Executable
       uses: sayyid5416/pyinstaller@v1
       with:
-        python_ver: '3.10'
+        python_ver: '3.12'
         spec: 'spec.spec'
         requirements: 'requirements.txt'
         upload_exe_with_name: 'LabAI-windows'
