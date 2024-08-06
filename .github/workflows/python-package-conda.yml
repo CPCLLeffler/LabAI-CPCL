@@ -27,8 +27,11 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
-        brew install gettext
-        brew link gettext --force
+        rm /usr/local/bin/gettext
+        rm /usr/local/lib/libintl.8.dylib
+        brew unlink gettext
+        brew prune
+        /usr/local/opt/gettext/bin/gettext --version
 
     - name: Create Executable
       uses: sayyid5416/pyinstaller@v1
