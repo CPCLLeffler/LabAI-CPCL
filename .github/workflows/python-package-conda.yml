@@ -83,7 +83,7 @@ jobs:
         run: mv ./dist/* ./LabAI-windows
 
       - name: Compress artifact
-        run: powershell Compress-Archive -Path ./LabAI-windows/* -DestinationPath ./LabAI-windows.zip
+        run: zip -r LabAI-windows.zip ./LabAI-windows
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
@@ -154,4 +154,59 @@ jobs:
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
-        
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+        with:
+          tag_name: "v1.0.0-${{ env.RELEASE_TIME }}"
+          release_name: "LabAI Release - ${{ env.RELEASE_TIME }}"
+          body: "Release notes for LabAI"
+          draft: false
+          prerelease: false
+
+      - name: Download Artifact - Ubuntu
+        uses: actions/download-artifact@v2
+        with:
+          name: LabAI-ubuntu
+          path: ./LabAI-ubuntu.zip
+
+      - name: Download Artifact - Windows
+        uses: actions/download-artifact@v2
+        with:
+          name: LabAI-windows
+          path: ./LabAI-windows.zip
+
+      - name: Download Artifact - macOS
+        uses: actions/download-artifact@v2
+        with:
+          name: LabAI-macos
+          path: ./LabAI-macos.zip
+
+      - name: Upload Release Asset - Ubuntu
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./LabAI-ubuntu.zip
+          asset_name: LabAI-ubuntu-${{ env.RELEASE_TIME }}.zip
+          asset_content_type: application/zip
+
+      - name: Upload Release Asset - Windows
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./LabAI-windows.zip
+          asset_name: LabAI-windows-${{ env.RELEASE_TIME }}.zip
+          asset_content_type: application/zip
+
+      - name: Upload Release Asset - macOS
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./LabAI-macos.zip
+          asset_name: LabAI-macos-${{ env.RELEASE_TIME }}.zip
+          asset_content_type: application/zip
