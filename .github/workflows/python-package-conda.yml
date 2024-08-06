@@ -1,35 +1,100 @@
-name: Python Package using Conda
+name: Build LabAI
 
-on: [push]
+on: [push, pull_request]
 
 jobs:
-  build-linux:
-    runs-on: ubuntu-latest
-    strategy:
-      max-parallel: 5
+  build-macos:
+    runs-on: macos-latest
 
     steps:
-    - uses: actions/checkout@v4
-    - name: PyInstaller Action
-      uses: Martin005/pyinstaller-action@v1.2.0
-            
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
       with:
         python-version: '3.10'
-    - name: Add conda to system path
-      run: |
-        # $CONDA is an environment variable pointing to the root of the miniconda directory
-        echo $CONDA/bin >> $GITHUB_PATH
+
     - name: Install dependencies
       run: |
-        conda env update --file environment.yml --name base
-    - name: Lint with flake8
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Create Executable
+      uses: sayyid5416/pyinstaller@v1
+      with:
+        python_ver: '3.10'
+        spec: 'spec.spec'
+        requirements: 'requirements.txt'
+        upload_exe_with_name: 'LabAI-macos'
+        options: --onefile, --name "LabAI", --console  # --console ensures console window
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: LabAI-macos
+        path: ./dist
+
+  build-linux:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.10'
+
+    - name: Install dependencies
       run: |
-        conda install flake8
-        # stop the build if there are Python syntax errors or undefined names
-        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-        # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
-        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
-    - name: Test with pytest
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Create Executable
+      uses: sayyid5416/pyinstaller@v1
+      with:
+        python_ver: '3.10'
+        spec: 'spec.spec'
+        requirements: 'requirements.txt'
+        upload_exe_with_name: 'LabAI-linux'
+        options: --onefile, --name "LabAI", --console  # --console ensures console window
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: LabAI-linux
+        path: ./dist
+
+  build-windows:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.10'
+
+    - name: Install dependencies
       run: |
-        conda install pytest
-        pytest
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Create Executable
+      uses: sayyid5416/pyinstaller@v1
+      with:
+        python_ver: '3.10'
+        spec: 'spec.spec'
+        requirements: 'requirements.txt'
+        upload_exe_with_name: 'LabAI-windows'
+        options: --onefile, --name "LabAI", --console  # --console ensures console window
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: LabAI-windows
+        path: ./dist
