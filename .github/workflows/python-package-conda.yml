@@ -116,6 +116,7 @@ jobs:
       run: |
         pyinstaller spec.spec
 
+
     - name: Upload Artifact
       uses: actions/upload-artifact@v2
       with:
@@ -128,6 +129,12 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
+
+    - name: Create directories for artifacts
+      run: |
+        mkdir -p artifacts/ubuntu
+        mkdir -p artifacts/windows
+        mkdir -p artifacts/macos
 
     - name: Download Artifact - Ubuntu
       uses: actions/download-artifact@v2
