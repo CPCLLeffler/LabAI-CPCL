@@ -36,15 +36,6 @@ jobs:
         name: LabAI-ubuntu
         path: ./dist
 
-    - name: Create GitHub Release
-      if: github.event_name == 'push'
-      uses: softprops/action-gh-release@v2
-      with:
-        tag_name: "Releases"  # Use the commit SHA as the tag name
-        files: dist/*
-      env:
-        GITHUB_TOKEN: ${{ secrets.TOKEN }}
-
   build-and-release-windows:
     runs-on: windows-latest
     steps:
@@ -71,15 +62,6 @@ jobs:
       with:
         name: LabAI-windows
         path: ./dist
-
-    - name: Create GitHub Release
-      if: github.event_name == 'push'
-      uses: softprops/action-gh-release@v2
-      with:
-        tag_name: "Releases"  # Use the commit SHA as the tag name
-        files: dist/*
-      env:
-        GITHUB_TOKEN: ${{ secrets.TOKEN }}
 
   build-and-release-macos:
     runs-on: macos-latest
@@ -116,11 +98,39 @@ jobs:
         name: LabAI-macos
         path: ./dist
 
+  create-release:
+    needs: [build-and-release-ubuntu, build-and-release-windows, build-and-release-macos]
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Download Artifact - Ubuntu
+      uses: actions/download-artifact@v2
+      with:
+        name: LabAI-ubuntu
+        path: artifacts/ubuntu
+
+    - name: Download Artifact - Windows
+      uses: actions/download-artifact@v2
+      with:
+        name: LabAI-windows
+        path: artifacts/windows
+
+    - name: Download Artifact - macOS
+      uses: actions/download-artifact@v2
+      with:
+        name: LabAI-macos
+        path: artifacts/macos
+
     - name: Create GitHub Release
-      if: github.event_name == 'push'
       uses: softprops/action-gh-release@v2
       with:
-        tag_name: "Releases" # Use the commit SHA as the tag name
-        files: dist/*
+        tag_name: "Releases"
+        release_name: "Releases"
+        files: |
+          artifacts/ubuntu/*
+          artifacts/windows/*
+          artifacts/macos/*
       env:
-        GITHUB_TOKEN: ${{ secrets.TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.PAT }}
