@@ -83,7 +83,7 @@ jobs:
         run: mv ./dist/* ./LabAI-windows
 
       - name: Compress artifact
-        run: zip -r LabAI-windows.zip ./LabAI-windows
+        run: powershell Compress-Archive -Path ./LabAI-windows/* -DestinationPath ./LabAI-windows.zip
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
