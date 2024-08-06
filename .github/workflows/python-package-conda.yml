@@ -138,6 +138,30 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
+      - name: Create directories for artifacts
+        run: |
+          mkdir -p artifacts/ubuntu
+          mkdir -p artifacts/windows
+          mkdir -p artifacts/macos
+
+      - name: Download Artifact - Ubuntu
+        uses: actions/download-artifact@v2
+        with:
+          name: LabAI-ubuntu
+          path: artifacts/ubuntu
+
+      - name: Download Artifact - Windows
+        uses: actions/download-artifact@v2
+        with:
+          name: LabAI-windows
+          path: artifacts/windows
+
+      - name: Download Artifact - macOS
+        uses: actions/download-artifact@v2
+        with:
+          name: LabAI-macos
+          path: artifacts/macos
+
       - name: Get current timestamp
         id: ts
         run: echo "RELEASE_TIME=$(date +'%Y%m%d%H%M%S')" >> $GITHUB_ENV
@@ -160,17 +184,17 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./LabAI-ubuntu.zip
+          asset_path: artifacts/ubuntu/LabAI-ubuntu.zip
           asset_name: LabAI-ubuntu-${{ env.RELEASE_TIME }}.zip
           asset_content_type: application/zip
 
       - name: Upload Release Asset - Windows
         uses: actions/upload-release-asset@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.TOKEN}}
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./LabAI-windows.zip
+          asset_path: artifacts/windows/LabAI-windows.zip
           asset_name: LabAI-windows-${{ env.RELEASE_TIME }}.zip
           asset_content_type: application/zip
 
@@ -180,6 +204,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./LabAI-macos.zip
+          asset_path: artifacts/macos/LabAI-macos.zip
           asset_name: LabAI-macos-${{ env.RELEASE_TIME }}.zip
           asset_content_type: application/zip
