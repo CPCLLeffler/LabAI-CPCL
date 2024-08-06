@@ -138,8 +138,8 @@ jobs:
         tag_name: "Releases"
         release_name: "Releases"
         files: |
-          artifacts/ubuntu/*
-          artifacts/windows/*
-          artifacts/macos/*
+          artifacts/ubuntu/LabAI-ubuntu.zip
+          artifacts/windows/LabAI-windows.zip
+          artifacts/macos/LabAI-macos.zip
       env:
-        GITHUB_TOKEN: ${{ secrets.PAT }}
+        GITHUB_TOKEN: ${{ secrets.TOKEN }}
