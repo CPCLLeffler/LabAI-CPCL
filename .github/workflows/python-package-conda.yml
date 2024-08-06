@@ -3,10 +3,10 @@ name: Build and Release LabAI
 on:
   push:
     branches:
-      - main  # Change this to the branch you want to trigger the workflow on
+      - main
   pull_request:
     branches:
-      - main  # Change this to the branch you want to trigger the workflow on
+      - main
 
 jobs:
   build-and-release-ubuntu:
@@ -37,6 +37,9 @@ jobs:
     - name: Create Executable
       run: |
         pyinstaller spec.spec
+
+    - name: List Files in Dist
+      run: ls -la ./dist
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v2
@@ -72,6 +75,9 @@ jobs:
     - name: Create Executable
       run: |
         pyinstaller spec.spec
+
+    - name: List Files in Dist
+      run: ls -la ./dist
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v2
@@ -116,6 +122,8 @@ jobs:
       run: |
         pyinstaller spec.spec
 
+    - name: List Files in Dist
+      run: ls -la ./dist
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v2
@@ -163,14 +171,18 @@ jobs:
     - name: List Downloaded Files - macOS
       run: ls -l artifacts/macos
 
+    - name: Get current timestamp
+      id: ts
+      run: echo "RELEASE_TIME=$(date +'%Y%m%d%H%M%S')" >> $GITHUB_ENV
+
     - name: Create GitHub Release
       id: create_release
       uses: actions/create-release@v1
       env:
-        GITHUB_TOKEN: ${{ secrets.TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: "v1.0.0" # Change this to your desired tag name
-        release_name: "LabAI Release"
+        tag_name: "v1.0.0-${{ env.RELEASE_TIME }}"
+        release_name: "LabAI Release - ${{ env.RELEASE_TIME }}"
         body: "Release notes for LabAI"
         draft: false
         prerelease: false
@@ -180,7 +192,7 @@ jobs:
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: artifacts/ubuntu/*
-        asset_name: LabAI-ubuntu
+        asset_name: LabAI-ubuntu-${{ env.RELEASE_TIME }}
         asset_content_type: application/zip
 
     - name: Upload Release Asset - Windows
@@ -188,7 +200,7 @@ jobs:
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: artifacts/windows/*
-        asset_name: LabAI-windows
+        asset_name: LabAI-windows-${{ env.RELEASE_TIME }}
         asset_content_type: application/zip
 
     - name: Upload Release Asset - macOS
@@ -196,5 +208,5 @@ jobs:
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: artifacts/macos/*
-        asset_name: LabAI-macos
+        asset_name: LabAI-macos-${{ env.RELEASE_TIME }}
         asset_content_type: application/zip
