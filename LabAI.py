@@ -11,15 +11,17 @@ from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 from sklearn.model_selection import train_test_split
 import tkinter.filedialog
 import tkinter
+from tkinter import PhotoImage
 import threading
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import seaborn as sns
 import ttkbootstrap as ttk
 from ttkbootstrap.constants import *
-
+import webbrowser
 # Initialize global variables used in functions
-
+def abrir_github():
+    webbrowser.open("https://github.com/CPCLLeffler/LabAI-CPCL/")
 current_plot = "scatter"
 polyKernelSettings = {"grau": float, "coef0": float }
 sigmoidKernelSettings = {"coef0": float}
@@ -184,7 +186,7 @@ def placeButtons():
     switch_plot_button.grid(row=2, column=0, columnspan=2, sticky='nsew')
     fileSelect.grid(row=12, column=0, columnspan=2, sticky="nsew")
     label.grid(row=12, column=2)
-    
+    github.grid(row=40, column=0)
 
     change_reg_type()
 def plot_scatter():
@@ -739,6 +741,8 @@ def sigmoid_kernel_settings():
 
 root = ttk.Window(themename="solar")
 root.title("LabAI")
+root.iconbitmap("labailogo.ico")
+imagem = PhotoImage(file="github.png")
 root.geometry("800x600")
 root.minsize(height=600, width=900)
 
@@ -786,7 +790,7 @@ indice = ttk.Label(font=("Arial", 8))
 indice2 = ttk.Label(font=("Arial", 8))
 label = ttk.Label(text="")
 dependent = ttk.Label(text="")
-
+github = tkinter.Button(image=imagem, command=lambda: abrir_github(), bd=-1)
 def start_thread():
     global bestRandomVar
     bestRandomVar = threading.Thread(target=findBestRandom)
