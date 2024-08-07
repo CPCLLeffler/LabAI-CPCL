@@ -741,8 +741,8 @@ def sigmoid_kernel_settings():
 
 root = ttk.Window(themename="solar")
 root.title("LabAI")
-root.iconbitmap("labailogo.ico")
-imagem = PhotoImage(file="github.png")
+root.iconbitmap("media/labailogo.ico")
+imagem = PhotoImage(file="media/github.png")
 root.geometry("800x600")
 root.minsize(height=600, width=900)
 

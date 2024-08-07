@@ -24,17 +24,17 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/req/requirements.txt') }}
           restore-keys: |
             ${{ runner.os }}-pip-
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          pip install -r req/requirements.txt
           pip install pyinstaller
       - name: Create Executable
         run: |
-          pyinstaller spec.spec
+          pyinstaller req/spec.spec
       - name: Move artifact to root
         run: mv ./dist/* ./LabAI-ubuntu
 
@@ -62,17 +62,17 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/req/requirements.txt') }}
           restore-keys: |
             ${{ runner.os }}-pip-
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          pip install -r req/requirements.txt
           pip install pyinstaller
       - name: Create Executable
         run: |
-          pyinstaller spec.spec
+          pyinstaller req/spec.spec
       - name: Move artifact to root
         run: mv ./dist/* ./LabAI-windows
 
@@ -108,17 +108,17 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/req/requirements.txt') }}
           restore-keys: |
             ${{ runner.os }}-pip-
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          pip install -r req/requirements.txt
           pip install pyinstaller
       - name: Create Executable
         run: |
-          pyinstaller spec.spec
+          pyinstaller req/spec.spec
       - name: Move artifact to root
         run: mv ./dist/* ./LabAI-macos
 
