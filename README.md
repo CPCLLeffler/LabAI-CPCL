@@ -4,7 +4,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/CPCLLeffler/LabAI-CPCL">
-    <img src="lefflerlogo.png" alt="Logo" width="80" height="80">
+    <img src="media/lefflerlogo.png" alt="Logo" width="80" height="80">
   </a>
 
   <h3 align="center">CPCL-LabAI</h3>
