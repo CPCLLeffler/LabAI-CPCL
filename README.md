@@ -1,5 +1,4 @@
 <a id="readme-top"></a>
-[![Forks][forks-shield]][forks-url]
 [![LinkedIn][linkedin-shield]][linkedin-url]
 
 <br />
