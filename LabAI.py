@@ -1,3 +1,32 @@
+import platform
+import subprocess
+
+def install_dependencies():
+    system = platform.system()
+    distro = ""
+    try:
+        if system == "Darwin":
+            # macOS
+            subprocess.run(["brew", "install", "python-tk"])
+        elif system == "Linux":
+            distro = subprocess.check_output(["uname", "-a"]).decode().lower()
+            if "arch" in distro:
+                # Arch Linux
+                subprocess.run(["sudo", "pacman", "-S", "--noconfirm", "tk"])
+            elif "debian" in distro or "ubuntu" in distro:
+                # Debian/Ubuntu
+                subprocess.run(["sudo", "apt-get", "install", "-y", "python3-tk"])
+            elif "fedora" in distro:
+                # Fedora
+                subprocess.run(["sudo", "dnf", "install", "-y", "python3-tkinter"])
+        else:
+            print(f"Sistema {system} não suportado automaticamente.")
+    except Exception as e:
+        print(f"Erro ao instalar dependências no sistema {system} ({distro}): {e}")
+
+install_dependencies()
+
+
 import tkinter.messagebox
 import numpy as np
 import os
