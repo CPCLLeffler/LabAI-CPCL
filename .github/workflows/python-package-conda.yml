@@ -27,17 +27,14 @@ jobs:
           key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
           restore-keys: |
             ${{ runner.os }}-pip-
-
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           pip install pyinstaller
-
       - name: Create Executable
         run: |
           pyinstaller spec.spec
-
       - name: Move artifact to root
         run: mv ./dist/* ./LabAI-ubuntu
 
@@ -68,17 +65,14 @@ jobs:
           key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
           restore-keys: |
             ${{ runner.os }}-pip-
-
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           pip install pyinstaller
-
       - name: Create Executable
         run: |
           pyinstaller spec.spec
-
       - name: Move artifact to root
         run: mv ./dist/* ./LabAI-windows
 
@@ -117,17 +111,14 @@ jobs:
           key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
           restore-keys: |
             ${{ runner.os }}-pip-
-
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           pip install pyinstaller
-
       - name: Create Executable
         run: |
           pyinstaller spec.spec
-
       - name: Move artifact to root
         run: mv ./dist/* ./LabAI-macos
 
@@ -166,19 +157,19 @@ jobs:
       - name: Download Artifact - Ubuntu
         uses: actions/download-artifact@v2
         with:
-          name: LabAI-ubuntu.zip
+          name: LabAI-ubuntu
           path: ./
 
       - name: Download Artifact - Windows
         uses: actions/download-artifact@v2
         with:
-          name: LabAI-windows.zip
+          name: LabAI-windows
           path: ./
 
       - name: Download Artifact - macOS
         uses: actions/download-artifact@v2
         with:
-          name: LabAI-macos.zip
+          name: LabAI-macos
           path: ./
 
       - name: Upload Release Asset - Ubuntu
