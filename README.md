@@ -19,11 +19,9 @@
 
 ## Sobre o Projeto
 
-[![Captura de Tela do LabAI](https://i.imgur.com/UXizsET.png)]
-
-### Compilado Com
-
-* [![PyInstaller](https://avatars.githubusercontent.com/u/1215332?s=280&v=4)](https://github.com/pyinstaller/pyinstaller)
+![Captura de Tela do LabAI](https://i.imgur.com/UXizsET.png)
+### Compilado com PyInstaller
+[![PyInstaller](https://avatars.githubusercontent.com/u/1215332?s=280&v=4)](https://github.com/pyinstaller/pyinstaller)
 
 ## Roadmap
 
