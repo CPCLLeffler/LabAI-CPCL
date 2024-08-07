@@ -34,7 +34,7 @@ jobs:
           pip install pyinstaller
       - name: Create Executable
         run: |
-          pyinstaller req/spec.spec
+          pyinstaller /spec.spec
       - name: Move artifact to root
         run: mv ./dist/* ./LabAI-ubuntu
 
@@ -72,7 +72,7 @@ jobs:
           pip install pyinstaller
       - name: Create Executable
         run: |
-          pyinstaller req/spec.spec
+          pyinstaller /spec.spec
       - name: Move artifact to root
         run: mv ./dist/* ./LabAI-windows
 
@@ -118,7 +118,7 @@ jobs:
           pip install pyinstaller
       - name: Create Executable
         run: |
-          pyinstaller req/spec.spec
+          pyinstaller /spec.spec
       - name: Move artifact to root
         run: mv ./dist/* ./LabAI-macos
 
