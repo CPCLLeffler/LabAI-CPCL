@@ -1,3 +1,37 @@
+import platform
+import subprocess
+
+def install_dependencies():
+    system = platform.system()
+    distro = ""
+    try:
+        if system == "Darwin":
+            # macOS
+            print("Instalando itens necessários para executar o programa.\nComando executado: brew install python-tk")
+            subprocess.run(["brew", "install", "python-tk"])
+        elif system == "Linux":
+            distro = subprocess.check_output(["uname", "-a"]).decode().lower()
+            if "arch" in distro or "manjaro" in distro:
+                # Arch/Manjaro
+                print("Instalando itens necessários para executar o programa.\nComando executado: sudo pacman -S --noconfirm tk")
+                subprocess.run(["sudo", "pacman", "-S", "--noconfirm", "tk"])
+            elif "debian" in distro or "ubuntu" in distro:
+                # Debian/Ubuntu
+                print("Instalando itens necessários para executar o programa.\nComando executado: sudo apt-get install -y python3-tk")
+                subprocess.run(["sudo", "apt-get", "install", "-y", "python3-tk"])
+            elif "fedora" in distro:
+                # Fedora
+                print("Instalando itens necessários para executar o programa.\nComando executado: sudo dnf install -y python3-tkinter")
+                subprocess.run(["sudo", "dnf", "install", "-y", "python3-tkinter"])
+            else:
+                print("Tipo de Linux não suportado. Use um sistema operacional como Arch, Debian, Ubuntu ou Fedora.")
+                input("Digite uma tecla qualquer para fechar...")
+                exit()
+        elif system == "Windows":
+            pass
+    except Exception as e:
+        print(f"Erro ao instalar dependências no sistema {system} ({distro}): {e}")
+install_dependencies()
 import tkinter.messagebox
 import numpy as np
 import os
