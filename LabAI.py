@@ -20,6 +20,7 @@ import ttkbootstrap as ttk
 from ttkbootstrap.constants import *
 import webbrowser
 # Initialize global variables used in functions
+os.chdir(os.path.dirname(__file__))
 def abrir_github():
     webbrowser.open("https://github.com/CPCLLeffler/LabAI-CPCL/")
 current_plot = "scatter"
@@ -741,7 +742,6 @@ def sigmoid_kernel_settings():
 
 root = ttk.Window(themename="solar")
 root.title("LabAI")
-root.iconbitmap("media/labailogo.ico")
 imagem = PhotoImage(file="media/github.png")
 root.geometry("800x600")
 root.minsize(height=600, width=900)
