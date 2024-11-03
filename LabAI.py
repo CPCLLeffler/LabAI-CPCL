@@ -17,25 +17,26 @@ def install_tkinter():
         elif "arch" in distro:
             install_command = "sudo pacman -S --noconfirm tk"
         else:
-            print("Linux distribution not recognized or not supported by this script.")
+            print("Distribuição do Linux não reconhecida. Caso o executável falhe, tente instalar o Tkinter manualmente em sua máquina usando os métodos de sua distribuição do Linux.")
             return
 
     elif system == "darwin":  # macOS
         # Check if Homebrew is installed
         try:
             subprocess.run(["brew", "--version"], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            print("Homebrew detected.")
+            print("Homebrew detectado.")
             install_command = "brew install python-tk"
         except subprocess.CalledProcessError:
-            print("Homebrew is not installed. Please install Homebrew first from https://brew.sh/")
+            print("Homebrew não está instalado. Por favor, instale Homebrew primeiro | https://brew.sh/")
             return
 
     else:
-        print("This script only supports Linux and macOS.")
+        print("Máquinas executando Windows não precisam que o Tkinter seja instalado separadamente.")
         return
 
-    print(f"Detected system: {system}")
-    print("Attempting to install tkinter...")
+
+    print(f"Sistema detectado: {system}")
+    print("Tentando instalar o Tkinter...")
 
     # Execute the command and show output
     process = subprocess.Popen(install_command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -48,9 +49,9 @@ def install_tkinter():
     
     # Check if installation was successful
     if process.returncode == 0:
-        print("tkinter installed successfully.")
+        print("Tkinter instalado com sucesso.")
     else:
-        print("There was an error installing tkinter.")
+        print("Houve um erro durante a instalação do Tkinter.")
 
 install_tkinter()
 
@@ -134,7 +135,7 @@ def filedialog():
     before = False
     placeButtons()
 
-def newPrint(*args):
+def output(*args):
     for s in args:
         outputFileW.write("\n" + str(s))
         print(s)
@@ -203,22 +204,22 @@ def change_reg_type(typeReg="Regressão Linear", ntrabalhos=100, intercept=True,
         text=f"Índices Estatísticos:\nR-squared: {r2}\nMSE: {mse}\nRMSE: {rmse}\nMAE: {mae}")
     if typeReg != "Floresta Aleatória":
         indice2.config(text=f"Coeficiente e Intercepto\nC: {model.coef_}\nI: {model.intercept_}")
-    newPrint(f'Mean Squared Error: {mse}')
-    newPrint(f'Root Mean Squared Error: {rmse}')
-    newPrint(f'Mean Absolute Error: {mae}')
-    newPrint(f'R^2 Score: {r2}')
+    output(f'Mean Squared Error: {mse}')
+    output(f'Root Mean Squared Error: {rmse}')
+    output(f'Mean Absolute Error: {mae}')
+    output(f'R^2 Score: {r2}')
     if typeReg != "Floresta Aleatória":
-        newPrint(f'Intercept: {model.intercept_}')
-        newPrint(f'Coefficients: {model.coef_}')
+        output(f'Intercept: {model.intercept_}')
+        output(f'Coefficients: {model.coef_}')
 
     correlacao_dependente = df.iloc[:, :-1].corrwith(df.iloc[:, -1], method='spearman').abs()
     correlacao_dependente = correlacao_dependente.sort_values(ascending=False)
-    newPrint("Variáveis que mais influenciam:")
-    newPrint(correlacao_dependente)
+    output("Variáveis que mais influenciam:")
+    output(correlacao_dependente)
     variavel_mais_influente = correlacao_dependente.idxmax()
     correlacao_maxima = correlacao_dependente.max()
-    newPrint("Variável que mais influencia no alcance:", variavel_mais_influente)
-    newPrint("Correlação máxima:", correlacao_maxima)
+    output("Variável que mais influencia no alcance:", variavel_mais_influente)
+    output("Correlação máxima:", correlacao_maxima)
     if current_plot == "scatter":
         plot_scatter()
     else:
@@ -339,34 +340,39 @@ def addToDict(key):
         insertTextbox.insert("1.0", dropDict[key])
     setDictKey()
 
-def calculate():
-    novo_dado = []
-    dados_dropdown = []
-    global dropDict, model, first, poly_features
-    try:
-        for key, value in dropDict.items():
-            value = value.strip()
-            if value == "":
-                tkinter.messagebox.showerror("Erro!", f"O valor {key} está vazio.")
-            newPrint(f"Processando chave: {key}, valor: {value}")
-            try:
-                value = float(value)
-            except ValueError:
-                tkinter.messagebox.showerror("Erro!", f"Valor flutuante inválido para {key}: {value}")
-            novo_dado.append(value)
-        novo_dado = np.array(novo_dado).reshape(1, -1)
-        if regType == "Regressão Polinomial":
-            novo_dado = poly_features.transform(novo_dado)
-        prediction = model.predict(novo_dado)
-        resultTextbox.config(state="normal")
-        resultTextbox.delete("1.0", "end")
-        resultTextbox.insert("1.0", str(prediction))
-        resultTextbox.config(state="disabled")
-        return prediction
-    except ValueError as e:
-        tkinter.messagebox.showerror("Erro!", f"Erro de Valor (ValueError): {e}")
-    except Exception as e:
-        tkinter.messagebox.showerror("Erro!", f"Erro: {e}")
+# def calculate():
+#     global switchLinear, switchPoly, switchRandomForest, switchSVR, switchRidge, switchElasticNet, linearV, polyV, randomV, svrV, ridgeV, elasticNetV
+#     def turnOnOff():
+#         possibilidades = [linearV, polyV, randomV, svrV, ridgeV, elasticNetV]
+#         for i in possibilidades:
+#             if i.get() == False:
+#                 match i:
+#                     case linearV:
+#                         n_trabalhos.config(state="disabled")
+#                     case polyV:
+                    
+#                     case randomV:
+                    
+#                     case svrV:
+                    
+#                     case ridgeV:
+                
+#                     case elasticNetV:
+                        
+
+#     linearV = ttk.BooleanVar(value=ttk.TRUE)
+#     polyV = ttk.BooleanVar(value=ttk.TRUE)
+#     randomV = ttk.BooleanVar(value=ttk.TRUE)
+#     svrV = ttk.BooleanVar(value=ttk.TRUE)
+#     ridgeV = ttk.BooleanVar(value=ttk.TRUE)
+#     elasticNetV = ttk.BooleanVar(value=ttk.TRUE)
+#     rootConfigSearch = ttk.Toplevel(root, height=400, width=400)
+#     switchLinear = ttk.Checkbutton(rootConfigSearch, text="Regressão Linear")
+#     switchPoly = ttk.Checkbutton(rootConfigSearch, text="Regressão Polinomial")
+#     switchRandomForest = ttk.Checkbutton(rootConfigSearch, text="Floresta Aleatória")
+#     switchSVR = ttk.Checkbutton(rootConfigSearch, text="Regressão de Suporte Vetorial")
+#     switchRidge = ttk.Checkbutton(rootConfigSearch, text="Regressão Ridge")
+#     switchElasticNet = ttk.Checkbutton(rootConfigSearch, text="Regressão Elastic Net", command=lambda: turnOnOff(), variable=elasticNetV  )
 def erroCalc():
     global xmedido, xcalculado, resultTextboxErro
     try:

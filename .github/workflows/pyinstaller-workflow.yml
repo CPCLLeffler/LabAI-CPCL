@@ -9,7 +9,7 @@ on:
       - main
 
 jobs:
-  build-and-release-ubuntu:
+  build-ubuntu:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -34,7 +34,8 @@ jobs:
           pip install pyinstaller
       - name: Create Executable
         run: |
-          pyinstaller spec.spec
+          pyinstaller --onefile spec.spec
+
       - name: Move artifact to root
         run: mv ./dist/* ./LabAI-ubuntu
 
@@ -50,7 +51,7 @@ jobs:
           name: LabAI-ubuntu
           path: ./LabAI-ubuntu.zip
 
-  build-and-release-windows:
+  build-windows:
     runs-on: windows-latest
     steps:
       - name: Checkout repository
@@ -75,7 +76,8 @@ jobs:
           pip install pyinstaller
       - name: Create Executable
         run: |
-          pyinstaller spec.spec
+          pyinstaller --onefile spec.spec
+
       - name: Move artifact to root
         run: mv ./dist/* ./LabAI-windows
 
@@ -91,7 +93,7 @@ jobs:
           name: LabAI-windows
           path: ./LabAI-windows.zip
 
-  build-and-release-macos:
+  build-macos:
     runs-on: macos-latest
     steps:
       - name: Checkout repository
@@ -124,7 +126,8 @@ jobs:
           pip install pyinstaller
       - name: Create Executable
         run: |
-          pyinstaller spec.spec
+          pyinstaller --onefile spec.spec
+
       - name: Move artifact to root
         run: mv ./dist/* ./LabAI-macos
 
@@ -140,73 +143,4 @@ jobs:
           name: LabAI-macos
           path: ./LabAI-macos.zip
 
-  create-release:
-    needs: [build-and-release-ubuntu, build-and-release-windows, build-and-release-macos]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Get current timestamp
-        id: ts
-        run: echo "RELEASE_TIME=$(date +'%Y%m%d%H%M%S')" >> $GITHUB_ENV
-
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.TOKEN }}
-        with:
-          tag_name: "v1.0.0-${{ env.RELEASE_TIME }}"
-          release_name: "LabAI Release - ${{ env.RELEASE_TIME }}"
-          body: "Release notes for LabAI"
-          draft: false
-          prerelease: false
-
-      - name: Download Artifact - Ubuntu
-        uses: actions/download-artifact@v4
-        with:
-          name: LabAI-ubuntu
-          path: ./
-
-      - name: Download Artifact - Windows
-        uses: actions/download-artifact@v4
-        with:
-          name: LabAI-windows
-          path: ./
-
-      - name: Download Artifact - macOS
-        uses: actions/download-artifact@v4
-        with:
-          name: LabAI-macos
-          path: ./
-
-      - name: Upload Release Asset - Ubuntu
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./LabAI-ubuntu.zip
-          asset_name: LabAI-ubuntu-${{ env.RELEASE_TIME }}.zip
-          asset_content_type: application/zip
-
-      - name: Upload Release Asset - Windows
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./LabAI-windows.zip
-          asset_name: LabAI-windows-${{ env.RELEASE_TIME }}.zip
-          asset_content_type: application/zip
-
-      - name: Upload Release Asset - macOS
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./LabAI-macos.zip
-          asset_name: LabAI-macos-${{ env.RELEASE_TIME }}.zip
-          asset_content_type: application/zip
+          
