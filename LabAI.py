@@ -1,37 +1,60 @@
 import platform
 import subprocess
 
-def install_dependencies():
-    system = platform.system()
-    distro = ""
-    try:
-        if system == "Darwin":
-            # macOS
-            print("Instalando itens necessários para executar o programa.\nComando executado: brew install python-tk")
-            subprocess.run(["brew", "install", "python-tk"])
-        elif system == "Linux":
-            distro = subprocess.check_output(["uname", "-a"]).decode().lower()
-            if "arch" in distro or "manjaro" in distro:
-                # Arch/Manjaro
-                print("Instalando itens necessários para executar o programa.\nComando executado: sudo pacman -S --noconfirm tk")
-                subprocess.run(["sudo", "pacman", "-S", "--noconfirm", "tk"])
-            elif "debian" in distro or "ubuntu" in distro:
-                # Debian/Ubuntu
-                print("Instalando itens necessários para executar o programa.\nComando executado: sudo apt-get install -y python3-tk")
-                subprocess.run(["sudo", "apt-get", "install", "-y", "python3-tk"])
-            elif "fedora" in distro:
-                # Fedora
-                print("Instalando itens necessários para executar o programa.\nComando executado: sudo dnf install -y python3-tkinter")
-                subprocess.run(["sudo", "dnf", "install", "-y", "python3-tkinter"])
-            else:
-                print("Tipo de Linux não suportado. Use um sistema operacional como Arch, Debian, Ubuntu ou Fedora.")
-                input("Digite uma tecla qualquer para fechar...")
-                exit()
-        elif system == "Windows":
-            pass
-    except Exception as e:
-        print(f"Erro ao instalar dependências no sistema {system} ({distro}): {e}")
-install_dependencies()
+def install_tkinter():
+    # Detect OS
+    system = platform.system().lower()
+    
+    if system == "linux":
+        # Detect Linux distribution
+        distro = platform.linux_distribution()[0].lower()
+        
+        # Define the command based on the distribution
+        if "ubuntu" in distro or "debian" in distro:
+            install_command = "sudo apt-get update && sudo apt-get install -y python3-tk"
+        elif "fedora" in distro or "centos" in distro or "redhat" in distro:
+            install_command = "sudo dnf install -y python3-tkinter"
+        elif "arch" in distro:
+            install_command = "sudo pacman -S --noconfirm tk"
+        else:
+            print("Linux distribution not recognized or not supported by this script.")
+            return
+
+    elif system == "darwin":  # macOS
+        # Check if Homebrew is installed
+        try:
+            subprocess.run(["brew", "--version"], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            print("Homebrew detected.")
+            install_command = "brew install python-tk"
+        except subprocess.CalledProcessError:
+            print("Homebrew is not installed. Please install Homebrew first from https://brew.sh/")
+            return
+
+    else:
+        print("This script only supports Linux and macOS.")
+        return
+
+    print(f"Detected system: {system}")
+    print("Attempting to install tkinter...")
+
+    # Execute the command and show output
+    process = subprocess.Popen(install_command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+    for line in iter(process.stdout.readline, b''):
+        print(line.decode().strip())
+    
+    process.stdout.close()
+    process.wait()
+    
+    # Check if installation was successful
+    if process.returncode == 0:
+        print("tkinter installed successfully.")
+    else:
+        print("There was an error installing tkinter.")
+
+install_tkinter()
+
+
 import tkinter.messagebox
 import numpy as np
 import os
