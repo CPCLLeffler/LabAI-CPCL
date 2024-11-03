@@ -27,24 +27,20 @@ jobs:
           key: ${{ runner.os }}-pip-${{ hashFiles('**/req/requirements.txt') }}
           restore-keys: |
             ${{ runner.os }}-pip-
-      
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r req/requirements.txt
           pip install pyinstaller
-
       - name: Create Executable
         run: |
-          pyinstaller spec.spec
+          pyinstaller --onefile spec.spec
 
       - name: Move artifact to root
-        run: |
-          mkdir -p ./LabAI-ubuntu/_internal
-          mv ./dist/* ./LabAI-ubuntu/_internal/
+        run: mv ./dist/* ./LabAI-ubuntu
 
-      - name: Add media folder to _internal
-        run: cp -r ./media ./LabAI-ubuntu/_internal/
+      - name: Add media folder to artifact
+        run: cp -r ./media ./LabAI-ubuntu/
 
       - name: Compress artifact
         run: zip -r LabAI-ubuntu.zip ./LabAI-ubuntu
@@ -73,24 +69,20 @@ jobs:
           key: ${{ runner.os }}-pip-${{ hashFiles('**/req/requirements.txt') }}
           restore-keys: |
             ${{ runner.os }}-pip-
-      
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r req/requirements.txt
           pip install pyinstaller
-
       - name: Create Executable
         run: |
-          pyinstaller spec.spec
+          pyinstaller --onefile spec.spec
 
       - name: Move artifact to root
-        run: |
-          mkdir -p ./LabAI-windows/_internal
-          mv ./dist/* ./LabAI-windows/_internal/
+        run: mv ./dist/* ./LabAI-windows
 
-      - name: Add media folder to _internal
-        run: cp -r ./media ./LabAI-windows/_internal/
+      - name: Add media folder to artifact
+        run: cp -r ./media ./LabAI-windows/
 
       - name: Compress artifact
         run: powershell Compress-Archive -Path ./LabAI-windows/* -DestinationPath ./LabAI-windows.zip
@@ -127,24 +119,20 @@ jobs:
           key: ${{ runner.os }}-pip-${{ hashFiles('**/req/requirements.txt') }}
           restore-keys: |
             ${{ runner.os }}-pip-
-      
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r req/requirements.txt
           pip install pyinstaller
-
       - name: Create Executable
         run: |
-          pyinstaller spec.spec
+          pyinstaller --onefile spec.spec
 
       - name: Move artifact to root
-        run: |
-          mkdir -p ./LabAI-macos/_internal
-          mv ./dist/* ./LabAI-macos/_internal/
+        run: mv ./dist/* ./LabAI-macos
 
-      - name: Add media folder to _internal
-        run: cp -r ./media ./LabAI-macos/_internal/
+      - name: Add media folder to artifact
+        run: cp -r ./media ./LabAI-macos/
 
       - name: Compress artifact
         run: zip -r LabAI-macos.zip ./LabAI-macos
@@ -154,3 +142,5 @@ jobs:
         with:
           name: LabAI-macos
           path: ./LabAI-macos.zip
+
+          
