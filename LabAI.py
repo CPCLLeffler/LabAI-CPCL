@@ -1,41 +1,44 @@
 import distro
 import os
-
+import platform
 def install_tkinter():
+    if platform.system().lower() == "linux":
     # Get the "like" field from the distribution
-    distribution_like = distro.like()
+        distribution_like = distro.like()
 
-    # Define the installation command based on distribution type
-    match distribution_like:
-        case "debian" | "ubuntu":
-            command = "sudo apt update && sudo apt install -y python3-tk"
-        case "rhel" | "fedora" | "centos":
-            command = "sudo dnf install -y python3-tkinter"  # For newer Fedora/RHEL/CentOS versions
-        case "suse":
-            command = "sudo zypper install -y python3-tk"
-        case "arch":
-            command = "sudo pacman -Sy --noconfirm tk"  # Arch uses "tk" for tkinter
-        case "alpine":
-            command = "sudo apk add --no-cache python3-tkinter"  # Alpine Linux
-        case "void":
-            command = "sudo xbps-install -Sy python3-tk"  # Void Linux
-        case "gentoo":
-            command = "sudo emerge dev-python/tkinter"  # Gentoo
-        case "slackware":
-            print("Use o package manager do Slackware ou compile o código fonte, já que o nome do Tkinter pode variar de nome dependendo da sua distro.")
-            return
-        case _:
-            print(f"Distro '{distribution_like}' não reconhecido. Instale o Tkinter manualmente.")
-            return
+        # Define the installation command based on distribution type
+        match distribution_like:
+            case "debian" | "ubuntu":
+                command = "sudo apt update && sudo apt install -y python3-tk"
+            case "rhel" | "fedora" | "centos":
+                command = "sudo dnf install -y python3-tkinter"  # For newer Fedora/RHEL/CentOS versions
+            case "suse":
+                command = "sudo zypper install -y python3-tk"
+            case "arch":
+                command = "sudo pacman -Sy --noconfirm tk"  # Arch uses "tk" for tkinter
+            case "alpine":
+                command = "sudo apk add --no-cache python3-tkinter"  # Alpine Linux
+            case "void":
+                command = "sudo xbps-install -Sy python3-tk"  # Void Linux
+            case "gentoo":
+                command = "sudo emerge dev-python/tkinter"  # Gentoo
+            case "slackware":
+                print("Use o package manager do Slackware ou compile o código fonte, já que o nome do Tkinter pode variar de nome dependendo da sua distro.")
+                return
+            case _:
+                print(f"Distro '{distribution_like}' não reconhecido. Instale o Tkinter manualmente.")
+                return
 
-    # Execute the command
-    os.system(command)
-
+        # Execute the command
+        os.system(command)
+    else:
+        return
 # Run the function
 install_tkinter()
 
 
-
+import ttkbootstrap.localization
+ttkbootstrap.localization.initialize_localities = bool
 import tkinter.messagebox
 import numpy as np
 import os
