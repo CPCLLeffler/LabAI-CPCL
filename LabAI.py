@@ -1,59 +1,39 @@
-import platform
-import subprocess
+import distro
+import os
 
 def install_tkinter():
-    # Detect OS
-    system = platform.system().lower()
-    
-    if system == "linux":
-        # Detect Linux distribution
-        distro = platform.linux_distribution()[0].lower()
-        
-        # Define the command based on the distribution
-        if "ubuntu" in distro or "debian" in distro:
-            install_command = "sudo apt-get update && sudo apt-get install -y python3-tk"
-        elif "fedora" in distro or "centos" in distro or "redhat" in distro:
-            install_command = "sudo dnf install -y python3-tkinter"
-        elif "arch" in distro:
-            install_command = "sudo pacman -S --noconfirm tk"
-        else:
-            print("Distribuição do Linux não reconhecida. Caso o executável falhe, tente instalar o Tkinter manualmente em sua máquina usando os métodos de sua distribuição do Linux.")
+    # Get the "like" field from the distribution
+    distribution_like = distro.like()
+
+    # Define the installation command based on distribution type
+    match distribution_like:
+        case "debian" | "ubuntu":
+            command = "sudo apt update && sudo apt install -y python3-tk"
+        case "rhel" | "fedora" | "centos":
+            command = "sudo dnf install -y python3-tkinter"  # For newer Fedora/RHEL/CentOS versions
+        case "suse":
+            command = "sudo zypper install -y python3-tk"
+        case "arch":
+            command = "sudo pacman -Sy --noconfirm tk"  # Arch uses "tk" for tkinter
+        case "alpine":
+            command = "sudo apk add --no-cache python3-tkinter"  # Alpine Linux
+        case "void":
+            command = "sudo xbps-install -Sy python3-tk"  # Void Linux
+        case "gentoo":
+            command = "sudo emerge dev-python/tkinter"  # Gentoo
+        case "slackware":
+            print("Use o package manager do Slackware ou compile o código fonte, já que o nome do Tkinter pode variar de nome dependendo da sua distro.")
+            return
+        case _:
+            print(f"Distro '{distribution_like}' não reconhecido. Instale o Tkinter manualmente.")
             return
 
-    elif system == "darwin":  # macOS
-        # Check if Homebrew is installed
-        try:
-            subprocess.run(["brew", "--version"], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            print("Homebrew detectado.")
-            install_command = "brew install python-tk"
-        except subprocess.CalledProcessError:
-            print("Homebrew não está instalado. Por favor, instale Homebrew primeiro | https://brew.sh/")
-            return
+    # Execute the command
+    os.system(command)
 
-    else:
-        print("Máquinas executando Windows não precisam que o Tkinter seja instalado separadamente.")
-        return
-
-
-    print(f"Sistema detectado: {system}")
-    print("Tentando instalar o Tkinter...")
-
-    # Execute the command and show output
-    process = subprocess.Popen(install_command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-
-    for line in iter(process.stdout.readline, b''):
-        print(line.decode().strip())
-    
-    process.stdout.close()
-    process.wait()
-    
-    # Check if installation was successful
-    if process.returncode == 0:
-        print("Tkinter instalado com sucesso.")
-    else:
-        print("Houve um erro durante a instalação do Tkinter.")
-
+# Run the function
 install_tkinter()
+
 
 
 import tkinter.messagebox
