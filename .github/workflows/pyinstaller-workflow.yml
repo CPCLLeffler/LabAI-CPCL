@@ -34,13 +34,13 @@ jobs:
           pip install pyinstaller
       - name: Create Executable
         run: |
-          pyinstaller --onefile spec.spec
+          pyinstaller spec.spec
 
       - name: Move artifact to root
         run: mv ./dist/* ./LabAI-ubuntu
 
       - name: Add media folder to artifact
-        run: cp -r ./media ./LabAI-ubuntu/
+        run: cp -r ./media ./LabAI-ubuntu/_internal/
 
       - name: Compress artifact
         run: zip -r LabAI-ubuntu.zip ./LabAI-ubuntu
@@ -76,13 +76,13 @@ jobs:
           pip install pyinstaller
       - name: Create Executable
         run: |
-          pyinstaller --onefile spec.spec
+          pyinstaller spec.spec
 
       - name: Move artifact to root
         run: mv ./dist/* ./LabAI-windows
 
       - name: Add media folder to artifact
-        run: cp -r ./media ./LabAI-windows/
+        run: cp -r ./media ./LabAI-windows/_internal/
 
       - name: Compress artifact
         run: powershell Compress-Archive -Path ./LabAI-windows/* -DestinationPath ./LabAI-windows.zip
@@ -126,13 +126,13 @@ jobs:
           pip install pyinstaller
       - name: Create Executable
         run: |
-          pyinstaller --onefile spec.spec
+          pyinstaller spec.spec
 
       - name: Move artifact to root
         run: mv ./dist/* ./LabAI-macos
 
       - name: Add media folder to artifact
-        run: cp -r ./media ./LabAI-macos/
+        run: cp -r ./media ./LabAI-macos/_internal/
 
       - name: Compress artifact
         run: zip -r LabAI-macos.zip ./LabAI-macos
