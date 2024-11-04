@@ -34,7 +34,7 @@ jobs:
           pip install pyinstaller
       - name: Create Executable
         run: |
-          pyinstaller spec.spec --hidden-import='PIL._tkinter_finder'
+          pyinstaller spec.spec
 
       - name: Move artifact to root
         run: mv ./dist/* ./LabAI-ubuntu
@@ -76,7 +76,7 @@ jobs:
           pip install pyinstaller
       - name: Create Executable
         run: |
-          pyinstaller spec.spec --hidden-import='PIL._tkinter_finder'
+          pyinstaller spec.spec
 
       - name: Move artifact to root
         run: mv ./dist/* ./LabAI-windows
@@ -126,7 +126,7 @@ jobs:
           pip install pyinstaller
       - name: Create Executable
         run: |
-          pyinstaller spec.spec --hidden-import='PIL._tkinter_finder'
+          pyinstaller spec.spec
 
       - name: Move artifact to root
         run: mv ./dist/* ./LabAI-macos
