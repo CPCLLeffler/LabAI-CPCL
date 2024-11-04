@@ -49,7 +49,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: LabAI-ubuntu
-          path: ./LabAI-ubuntu.zip
+          path: ./LabAI-ubuntu
 
   build-windows:
     runs-on: windows-latest
@@ -91,7 +91,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: LabAI-windows
-          path: ./LabAI-windows.zip
+          path: ./LabAI-windows
 
   build-macos:
     runs-on: macos-latest
@@ -141,6 +141,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: LabAI-macos
-          path: ./LabAI-macos.zip
+          path: ./LabAI-macos
 
           

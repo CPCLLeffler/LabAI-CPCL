@@ -37,8 +37,6 @@ def install_tkinter():
 install_tkinter()
 
 
-import ttkbootstrap.localization
-ttkbootstrap.localization.initialize_localities = bool
 import tkinter.messagebox
 import numpy as np
 import os
