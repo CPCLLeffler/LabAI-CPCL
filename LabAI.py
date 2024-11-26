@@ -1,47 +1,16 @@
-
-import distro
+#internal imports
+import output
+import erro
+import curves
+import predict
+import equationFile
+#internal imports
 import os
-import platform
-def install_tkinter():
-    if platform.system().lower() == "linux":
-    # Get the "like" field from the distribution
-        distribution_like = distro.like()
-
-        # Define the installation command based on distribution type
-        match distribution_like:
-            case "debian" | "ubuntu":
-                command = "sudo apt update && sudo apt install -y python3-tk"
-            case "rhel" | "fedora" | "centos":
-                command = "sudo dnf install -y python3-tkinter"  # For newer Fedora/RHEL/CentOS versions
-            case "suse":
-                command = "sudo zypper install -y python3-tk"
-            case "arch":
-                command = "sudo pacman -Sy --noconfirm tk"  # Arch uses "tk" for tkinter
-            case "alpine":
-                command = "sudo apk add --no-cache python3-tkinter"  # Alpine Linux
-            case "void":
-                command = "sudo xbps-install -Sy python3-tk"  # Void Linux
-            case "gentoo":
-                command = "sudo emerge dev-python/tkinter"  # Gentoo
-            case "slackware":
-                print("Use o package manager do Slackware ou compile o código fonte, já que o nome do Tkinter pode variar de nome dependendo da sua distro.")
-                return
-            case _:
-                print(f"Distro '{distribution_like}' não reconhecido. Instale o Tkinter manualmente.")
-                return
-
-        # Execute the command
-        os.system(command)
-    else:
-        return
-# Run the function
-install_tkinter()
-
 import tkinter.messagebox
 import numpy as np
-import os
 import pandas as pd
 import datetime as dt
+from scipy.optimize import curve_fit
 from sklearn.preprocessing import PolynomialFeatures
 from sklearn.linear_model import LinearRegression, ElasticNet, Ridge
 from sklearn.ensemble import RandomForestRegressor
@@ -67,10 +36,8 @@ kernelGlobal = "rbf"
 regType: str
 before = False
 canvases = []
-sizeVar = 0.2
 randomVar = 0
 first = False
-selectedKey = None
 start = False
 dropDict = None
 file_path = None
@@ -78,14 +45,12 @@ insertTextbox = None
 startReg = False
 resultTextbox = None
 start = False
-selectedKey = None
 startAfter = False
 startAfterReg = False
 df: pd.DataFrame
 currentReg = None
 regType = ""
 equation = ""
-
 
 def filedialog():
     global before, file_path,outputFileW, v
@@ -109,7 +74,7 @@ def filedialog():
         file_extension = os.path.splitext(file_path)[1].lower()
         startLabAI(file_path, file_extension)
 def startLabAI(file_path, file_extension):
-    global df
+    global df, label, dependent
     try:
         if file_extension in ['.xlsx', '.xls']:
             df = pd.read_excel(file_path)
@@ -118,27 +83,26 @@ def startLabAI(file_path, file_extension):
     except Exception as e:
         tkinter.messagebox.showerror("Erro!", f"Erro: {e}")
     finally:
+        label = ttk.Label(root, text="")
+        dependent = ttk.Label(root, text="")
+        
         label.config(text=os.path.basename(file_path))
         dependent.config(text="Variável dependente: " + df.columns[-1])
         placeButtons(df)
         menubar.entryconfig(index=1, state="normal")
         menubar.entryconfig(index=2, state="normal")
-def output(*args):
-    for s in args:
-        outputFileW.write("\n" + str(s))
-        print(s)
-        outputFileW.flush()
+
 
 def change_reg_type(df: pd.DataFrame, typeReg="Regressão Linear", ntrabalhos=100, intercept=True, grau=1, alfa=1.0, maxIterations=1000,
                     tolerancia=0.00001, solucionador="auto", n_estimadores=100, max_depth=None, min_amostras_divisao=2,
                     min_amostras_folha=1, estado_aleatorio_RF=0, kernel="linear", c=1.0, epsilon=0.1, gama='scale',
                     proporcao_l1=0.5):
-    global mse, rmse, mae, r2, randomVar, sizeVar, dropDict, model, before, equation, startAfterReg, regType, kernelGlobal, poly_features
+    global mse, rmse, mae, r2, randomVar, dropDict, model, before, equation, startAfterReg, regType, kernelGlobal, poly_features, indice, indice2
     regType = typeReg
     startAfterReg = True
     X = df.iloc[:, :-1]
     y = df.iloc[:, -1]
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=sizeVar, random_state=0)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0)
 
 
     if typeReg == "Regressão Linear":
@@ -194,6 +158,9 @@ def change_reg_type(df: pd.DataFrame, typeReg="Regressão Linear", ntrabalhos=10
                                       random_state=estado_aleatorio_RF)
         model.fit(X_train, y_train)
         tools.entryconfig(index=4, state="disabled")
+    elif typeReg == "Regressão Logarítmica":
+        model = LinearRegression(n_jobs=ntrabalhos)
+        np.log(pd['x']).values.reshape(-1, 1)
 
 
 
@@ -204,29 +171,32 @@ def change_reg_type(df: pd.DataFrame, typeReg="Regressão Linear", ntrabalhos=10
     rmse = np.sqrt(mse)
     mae = mean_absolute_error(y_test, y_pred)
     r2 = r2_score(y_test, y_pred)
+    indice = ttk.Label(root, font=("Arial",10))
+    indice2 = ttk.Label(root, font=("Arial", 10))
+    indice.grid(row=0, column=0, sticky='nsew', rowspan=1)
+    indice2.grid(row=0, column=1, sticky='w')
     indice.config(
         text=f"Índices Estatísticos:\nR^2: {r2}\nMSE: {mse}\nRMSE: {rmse}\nMAE: {mae}")
     if typeReg not in ["Floresta Aleatória", "Regressão de Suporte Vetorial"]:
         indice2.config(text=f"Coeficiente e Intercepto\nC: {model.coef_}\nI: {model.intercept_}")
-    output(f'Mean Squared Error: {mse}')
-    output(f'Root Mean Squared Error: {rmse}')
-    output(f'Mean Absolute Error: {mae}')
-    output(f'R^2 Score: {r2}')
+    output.output(f'Mean Squared Error: {mse}', outputFileW=outputFileW)
+    output.output(f'Root Mean Squared Error: {rmse}', outputFileW=outputFileW)
+    output.output(f'Mean Absolute Error: {mae}', outputFileW=outputFileW)
+    output.output(f'R^2 Score: {r2}', outputFileW=outputFileW)
     if typeReg not in ["Floresta Aleatória", "Regressão de Suporte Vetorial"]:
-        output(f'Intercept: {model.intercept_}')
-        output(f'Coefficients: {model.coef_}')
+        output.output(f'Intercept: {model.intercept_}', outputFileW=outputFileW)
+        output.output(f'Coefficients: {model.coef_}', outputFileW=outputFileW)
 
     correlacao_dependente = df.iloc[:, :-1].corrwith(df.iloc[:, -1], method='spearman').abs()
     correlacao_dependente = correlacao_dependente.sort_values(ascending=False)
-    output("Variáveis que mais influenciam:")
-    output(correlacao_dependente)
+    output.output("Variáveis que mais influenciam:", outputFileW=outputFileW)
+    output.output(correlacao_dependente, outputFileW=outputFileW)
     variavel_mais_influente = correlacao_dependente.idxmax()
     correlacao_maxima = correlacao_dependente.max()
-    output("Variável que mais influencia no alcance:", variavel_mais_influente)
-    output("Correlação máxima:", correlacao_maxima)
+    output.output("Variável que mais influencia no alcance:", variavel_mais_influente, outputFileW=outputFileW)
+    output.output("Correlação máxima:", correlacao_maxima, outputFileW=outputFileW)
     plot(df)
     before = True
-    dropDict = {col: '' for col in df.columns}
     return r2
 
 
@@ -235,20 +205,20 @@ def change_reg_type(df: pd.DataFrame, typeReg="Regressão Linear", ntrabalhos=10
 def plot(df):
     for i in canvases:
         i.destroy()
-    plot_scatter(df)
+    plot_scatter(df)    
     plot_spearman_heatmap(df)
-    
+
 
 def placeButtons(df):
-    indice.grid(row=0, column=0, sticky='nsew', rowspan=1)
-    indice2.grid(row=0, column=1, sticky='w')
+    github = tkinter.Button(root, image=imagem, command=lambda: webbrowser.open("https://github.com/CPCLLeffler/LabAI-CPCL/"), bd=-1)
     label.grid(row=40, column=0, sticky="nsew")
     github.grid(row=40, column=0, sticky="se")
     dependent.grid(row=39, column=0, columnspan=1, sticky="nsew")
     change_reg_type(df)
+
 def plot_scatter(df):
     global model
-    fig, ax = plt.subplots(figsize=(4, 4))
+    fig, ax = plt.subplots(figsize=(2, 3))
     ax.set_facecolor("#002B36")
     fig.set_facecolor("#002B36")
     ax.spines["bottom"].set_color("#FFFFFF")
@@ -263,13 +233,13 @@ def plot_scatter(df):
 
     X = df.iloc[:, :-1]
     y = df.iloc[:, -1]
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=sizeVar, random_state=0)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0)
 
     if regType == "Regressão Polinomial":
         X_test = poly_features.transform(X_test)
 
     y_pred = model.predict(X_test)
-    ax.scatter(y_test, y_pred, c='blue', label='Predito vs. Real')
+    ax.scatter(y_test, y_pred, c='yellow', label='Predito vs. Real')
     ax.plot([y_test.min(), y_test.max()], [y_test.min(), y_test.max()], 'r--', lw=2)
     ax.set_xlabel('Valores Reais')
     ax.set_ylabel('Valores Preditos')
@@ -314,119 +284,60 @@ def plot_spearman_heatmap(df):
     canvas_widget.grid(row=1, column=21, rowspan=18, columnspan=18, sticky='nsew')
     canvas.draw()
     canvases.append(canvas_widget)
+root = ttk.Window(themename="solar")
+root.title("LabAI")
+imagem = PhotoImage(file="media/github.png")
+root.geometry("1366x768")
+root.minsize(height=768, width=1366)
+for i in range(40):
+    root.grid_columnconfigure(i, weight=1)
+    root.grid_rowconfigure(i//2, weight=1)
+def modelConfig():
+    global regType
+    if regType == "Regressão Linear":
+        linear(df)
+    elif regType == "Regressão Polinomial":
+        poly(df)
+    elif regType == "Regressão Ridge":
+        ridge(df)
+    elif regType == "Floresta Aleatória":
+        random_forest(df)
+    elif regType == "Regressão de Suporte Vetorial":
+        svr(df)
+    elif regType == "Regressão Elastic Net":
+        elastic_net(df)
 
 
 
-def setDictKey():
-    global dropDict, insertTextbox, selectedKey, root2
-    if selectedKey:
-        dropDict[selectedKey] = insertTextbox.get("1.0", "end").strip()
-    root2.after(1, setDictKey)
 
-def addToDict(key):
-    global dropDict, insertTextbox, selectedKey
-    calculateButton.config(state="normal")
-    selectedKey = key
-    insertTextbox.delete("1.0", "end")
-    if key in dropDict:
-        insertTextbox.insert("1.0", dropDict[key])
-    setDictKey()
-def calculate():
-    novo_dado = []
-    dados_dropdown = []
-    global dropDict, model, first, poly_features
-    try:
-        for key, value in dropDict.items():
-            value = value.strip()
-            if value == "":
-                tkinter.messagebox.showerror("Erro!", f"O valor {key} está vazio.")
-            output(f"Processando chave: {key}, valor: {value}")
-            try:
-                value = float(value)
-            except ValueError:
-                tkinter.messagebox.showerror("Erro!", f"Valor flutuante inválido para {key}: {value}")
-            novo_dado.append(value)
-        novo_dado = np.array(novo_dado).reshape(1, -1)
-        if regType == "Regressão Polinomial":
-            novo_dado = poly_features.transform(novo_dado)
-        prediction = model.predict(novo_dado)
-        resultTextbox.config(state="normal")
-        resultTextbox.delete("1.0", "end")
-        resultTextbox.insert("1.0", str(prediction))
-        resultTextbox.config(state="disabled")
-        return prediction
-    except ValueError as e:
-        tkinter.messagebox.showerror("Erro!", f"Erro de Valor (ValueError): {e}")
-    except Exception as e:
-        tkinter.messagebox.showerror("Erro!", f"Erro: {e}")
-def erroCalc():
-    global xmedido, xcalculado, resultTextboxErro
-    try:
-        xmedidoV = xmedido.get("1.0", "end").strip()
-        xcalculadoV = xcalculado.get("1.0", "end").strip()
-        xmedidoV = eval(xmedidoV)
-        xcalculadoV = eval(xcalculadoV)
-        erroV = (abs(((xmedidoV-xcalculadoV)/xmedidoV)))*100
-        erroV = str(erroV)
-        erroV += "%"
-        resultTextboxErro.config(state="normal")
-        resultTextboxErro.delete("1.0", "end")
-        resultTextboxErro.insert("1.0", erroV)
-        resultTextboxErro.config(state="disabled")
-    except Exception as e:
-        tkinter.messagebox.showerror("Erro!", f"Erro: {e}")
+# Add a button to switch between scatter plot and heatmap
 
-def erro():
-    global root3, xcalculado, xmedido, resultTextboxErro
-    root3 = ttk.Toplevel(root, height=60, width=400)
-    root3.title("LabAI - Calculador de Porcentagem de Erro")
-    root3.resizable(False, False)
-    resultTextboxErro = ttk.Text(root3, state="disabled", height=1, width=10)
-    xmedido = ttk.Text(root3, height=1, width=10)
-    xcalculado = ttk.Text(root3, height=1, width=10)
-    xmedidoLabel = ttk.Label(root3, text="X Medido")
-    xcalculadoLabel = ttk.Label(root3, text="X Calculado")
-    calculateButtonErro = ttk.Button(root3, text="Calcular Erro", command=lambda: erroCalc())
-    calculateButtonErro.grid(row=0, column=3, sticky='nsew')
-    xcalculado.grid(row=0, column=0, sticky='nsew')
-    xcalculadoLabel.grid(row=1, column=0, sticky='nsew')
-    resultTextboxErro.grid(row=0, column=2, sticky='nsew')
-    xmedido.grid(row=0, column=1, sticky='nsew')
-    xmedidoLabel.grid(row=1, column=1, sticky='nsew')
-    resultLabelErro = ttk.Label(root3, text="% de Erro")
-    resultLabelErro.grid(row=1, column=2, sticky='nsew')
 
-def previsao(df):
-    global insertTextbox, resultTextbox, root2, dropDict, calculateButton
-    dropDict = {}
-    root2 = ttk.Toplevel(root, height=40, width=500)
-    root2.title("LabAI - Previsão")
-    variable = ttk.StringVar(root2)
-    root2.resizable(False, False)
+menubar = ttk.Menu(root)
+menubar.config(bg="#002B36", fg="#FFFFFF", activebackground="#013947", activeforeground="#FFFFFF")
+arquivo = ttk.Menu(menubar, tearoff=0)
+arquivo.add_command(label="Abrir", command=lambda: filedialog())
+regressionMenu = ttk.Menu(menubar, tearoff=0)
+regressionMenu.add_command(label='Regressão Linear', command=lambda: change_reg_type(df, typeReg="Regressão Linear"))
+regressionMenu.add_command(label='Regressão Polinomial', command=lambda: change_reg_type(df, typeReg="Regressão Polinomial"))
+regressionMenu.add_command(label='Regressão de Suporte Vetorial', command=lambda: change_reg_type(df, typeReg="Regressão de Suporte Vetorial"))
+regressionMenu.add_command(label='Floresta Aleatória', command=lambda: change_reg_type(df, typeReg="Floresta Aleatória"))
+regressionMenu.add_command(label='Regressão Ridge', command=lambda: change_reg_type(df, typeReg="Regressão Ridge"))
+regressionMenu.add_command(label='Regressão Elastic Net', command=lambda: change_reg_type(df ,typeReg="Regressão Elastic Net"))
+tools = ttk.Menu(menubar, tearoff=0)
+tools.add_command(label="Configurações do Modelo Atual", command=lambda: modelConfig())
+tools.add_command(label='Calculador de Erro', command=lambda: erro.erro())
+tools.add_command(label='Previsão', command=lambda: predict.previsao(df, regType))
+tools.add_command(label="Tabela", command=lambda: createTable(df))
+tools.add_command(label='Equação', command=lambda: equationFile.equacao(equation))
+tools.add_command(label="Curvas", command=lambda: curves.curveFinder(df))
+menubar.add_cascade(label="Arquivo", menu=arquivo)
+menubar.add_cascade(label="Ferramentas", menu=tools)
+menubar.add_cascade(label="Regressões", menu=regressionMenu)
+menubar.entryconfig(index=1, state="disabled")
+menubar.entryconfig(index=2, state="disabled")
 
-    resultTextbox = ttk.Text(root2, state="disabled", height=1, width=10)
-    resultLabel = ttk.Label(root2, text=df.columns[-1])
-    options = [""] + list(df.columns[:-1])
-    selectDrop = ttk.OptionMenu(root2, variable, *options, command=addToDict)
-    insertTextbox = ttk.Text(root2, height=1, width=10)
-    calculateButton = ttk.Button(root2, text="Prever", command=calculate)
-    calculateButton.grid(row=1, column=3, sticky='nsew')
-    calculateButton.config(state="disabled")
-    insertTextbox.grid(row=1, column=2, sticky='nsew')
-    selectDrop.grid(row=1, column=1, sticky='nsew')
-    resultTextbox.grid(row=0, column=4, sticky='nsew')
-    resultLabel.grid(row=1, column=4, sticky='nsew')
-def equacao():
-    global equation
-    root4 = ttk.Toplevel(root, height=500, width=500)
-    root4.title("LabAI - Equação do Modelo")
-    root4.rowconfigure(0, weight=5)
-    root4.columnconfigure(0, weight=5)
-    equationTextbox = ttk.Text(root4)
-    equationTextbox.delete("1.0", "end")
-    equationTextbox.insert("1.0", equation)
-    equationTextbox.config(state="disabled")
-    equationTextbox.grid(row=0, column=0, sticky='nsew')
+
 def validate_number(new_value, widget_name):
     widget = root.nametowidget(widget_name)
     if new_value.isdigit() or new_value == "":
@@ -464,7 +375,7 @@ def on_focus_out_float(event):
         widget.insert(0, "Input inválido")
         widget.configure(bootstyle="danger")
 
-def linear():
+def linear(df):
     global rootLinear
     rootLinear = ttk.Toplevel(root, height=160, width=100)
 
@@ -492,7 +403,7 @@ def linear():
     nTrabalhos.bind("<FocusOut>", on_focus_out)
     nTrabalhos.grid(column=0, row=1)
 
-def poly():
+def poly(df):
     global rootPoly
     rootPoly = ttk.Toplevel(root, height=160, width=100)
 
@@ -520,7 +431,7 @@ def poly():
     grau.bind("<FocusOut>", on_focus_out)
     grau.grid(column=0, row=1)
 
-def ridge():
+def ridge(df):
     global rootRidge
     rootRidge = ttk.Toplevel(root, height=160, width=100)
 
@@ -566,7 +477,7 @@ def ridge():
     solucionadorD = ttk.OptionMenu(rootRidge, solucionadorV, *solucionadorO)
     solucionadorD.grid(column=0, row=4)
 
-def random_forest():
+def random_forest(df):
     global rootRandomForest
     rootRandomForest = ttk.Toplevel(root, height=250, width=100)
 
@@ -614,7 +525,7 @@ def random_forest():
     estado_aleatorio.bind("<FocusOut>", on_focus_out)
     estado_aleatorio.grid(column=0, row=4)
 
-def elastic_net():
+def elastic_net(df):
     global rootElasticNet
     rootElasticNet = ttk.Toplevel(root, height=200, width=100)
 
@@ -659,7 +570,7 @@ def elastic_net():
     toleranciaD = ttk.OptionMenu(rootElasticNet, toleranciaV, *toleranciaDigs)
     toleranciaD.grid(column=0, row=3)
 
-def svr():
+def svr(df):
     global rootSVR, kernelV
     rootSVR = ttk.Toplevel(root, height=200, width=100)
     rootSVR.resizable(False, False)
@@ -737,80 +648,20 @@ def poly_kernel_settings():
     grauL.grid(column=1, row=1)
     grau.bind("<FocusOut>", on_focus_out)
     grau.grid(column=0, row=1)
-
-
-
-
-
-root = ttk.Window(themename="solar")
-root.title("LabAI")
-imagem = PhotoImage(file="media/github.png")
-root.geometry("1366x768")
-root.minsize(height=768, width=1366)
-for i in range(40):
-    root.grid_columnconfigure(i, weight=1)
-    root.grid_rowconfigure(i//2, weight=1)
-def modelConfig():
-    global regType
-    if regType == "Regressão Linear":
-        linear()
-    elif regType == "Regressão Polinomial":
-        poly()
-    elif regType == "Regressão Ridge":
-        ridge()
-    elif regType == "Floresta Aleatória":
-        random_forest()
-    elif regType == "Regressão de Suporte Vetorial":
-        svr()
-    elif regType == "Regressão Elastic Net":
-        elastic_net()
-def stop():
-    global stopButton, killThread
-    killThread = True
-    stopButton.grid_forget()
-
-
-
-# Add a button to switch between scatter plot and heatmap
-
-indice = ttk.Label(font=("Arial",10))
-indice2 = ttk.Label(font=("Arial", 10))
-label = ttk.Label(text="")
-dependent = ttk.Label(text="")
-github = tkinter.Button(image=imagem, command=lambda: webbrowser.open("https://github.com/CPCLLeffler/LabAI-CPCL/"), bd=-1)
-
-menubar = ttk.Menu(root)
-menubar.config(bg="#002B36", fg="#FFFFFF", activebackground="#013947", activeforeground="#FFFFFF")
-arquivo = ttk.Menu(menubar, tearoff=0)
-arquivo.add_command(label="Abrir", command=lambda: filedialog())
-regressionMenu = ttk.Menu(menubar, tearoff=0)
-regressionMenu.add_command(label='Regressão Linear', command=lambda: change_reg_type(df, typeReg="Regressão Linear"))
-regressionMenu.add_command(label='Regressão Polinomial', command=lambda: change_reg_type(df, typeReg="Regressão Polinomial"))
-regressionMenu.add_command(label='Regressão de Suporte Vetorial', command=lambda: change_reg_type(df, typeReg="Regressão de Suporte Vetorial"))
-regressionMenu.add_command(label='Floresta Aleatória', command=lambda: change_reg_type(df, typeReg="Floresta Aleatória"))
-regressionMenu.add_command(label='Regressão Ridge', command=lambda: change_reg_type(df, typeReg="Regressão Ridge"))
-regressionMenu.add_command(label='Regressão Elastic Net', command=lambda: change_reg_type(df ,typeReg="Regressão Elastic Net"))
-tools = ttk.Menu(menubar, tearoff=0)
-tools.add_command(label="Configurações do Modelo Atual", command=lambda: modelConfig())
-tools.add_command(label='Calculador de Erro', command=lambda: erro())
-tools.add_command(label='Previsão', command=lambda: previsao(df))
-tools.add_command(label="Tabela", command=lambda: createTable(df))
-tools.add_command(label='Equação', command=lambda: equacao())
-menubar.add_cascade(label="Arquivo", menu=arquivo)
-menubar.add_cascade(label="Ferramentas", menu=tools)
-menubar.add_cascade(label="Regressões", menu=regressionMenu)
-menubar.entryconfig(index=1, state="disabled")
-menubar.entryconfig(index=2, state="disabled")
-
-
-# Função para abrir um arquivo e ler CSV ou Excel
-
-
 # Função para criar a tabela
 
 
 def createTable(df):
+    def validate_number_float(new_value, widget_name):
+        widget = root.nametowidget(widget_name)
+        if new_value.replace('.', '', 1).isdigit() or new_value == "":
+            widget.configure(bootstyle="success")
+            return True
+        else:
+            widget.configure(bootstyle="danger")
+            return False
     rootTable = ttk.Toplevel(root)
+    rootTable.title("Tabela")
     rootTable.grid_columnconfigure(0, weight=1)
     rootTable.grid_rowconfigure(0, weight=1)
     def startTable(df):
@@ -863,6 +714,28 @@ def createTable(df):
         menubarTable.add_command(label="Salvar e reiniciar LabAI", command=lambda: save())
         menubarTable.add_command(label="Adicionar linha ao final", command=lambda: addLine())
         menubarTable.add_command(label="Remover linha", command=lambda: removeLine())
+        menubarTable.add_command(label="Aplicar logarítmo à coluna", command=lambda: log())
+        def log():
+            def applyLog():
+                for key, value in df[dropdown_var.get()].items():
+                    df.loc[key, dropdown_var.get()] = (np.log(value)) / (np.log(float(base.get())))
+                startTable(df)
+                rootLog.destroy()
+            rootLog = ttk.Toplevel(rootTable)
+            vcmdf = (rootLog.register(validate_number_float), '%P', '%W')
+            rootLog.title("Aplicar logarítmo à coluna")
+            rootLog.resizable(False, False)
+            base = ttk.Entry(rootLog, validatecommand=vcmdf)
+            baseLabel = ttk.Label(rootLog, text="Base do Logarítmo")
+            baseLabel.pack()
+            base.pack()
+            dropdown_var = ttk.StringVar(value=df.columns[0])
+            dropdown = ttk.OptionMenu(rootLog, dropdown_var, *[""] + list(df.columns))
+            dropdownLabel = ttk.Label(rootLog, text="Coluna afetada")
+            dropdownLabel.pack(pady=10)
+            dropdown.pack()
+            apply = ttk.Button(rootLog, text="Aplicar logarítmo", command=lambda: applyLog())
+            apply.pack()
         rootTable.config(menu=menubarTable)
 
         def removeLine():
@@ -898,13 +771,13 @@ def createTable(df):
             # Dropdown for selecting columns
             dropdown_var = ttk.StringVar(value=columns[1])
             dropdown_menu = ttk.OptionMenu(
-                rootEdit, dropdown_var, *columns, bootstyle="info"
+                rootEdit, dropdown_var, *columns
             )
             dropdown_menu.pack(pady=10)
 
             # Entry box for editing cell value
             entry_var = ttk.StringVar(value=row_values[0])
-            entry_box = ttk.Entry(rootEdit, textvariable=entry_var, bootstyle="info")
+            entry_box = ttk.Entry(rootEdit, textvariable=entry_var)
             entry_box.pack(pady=10)
 
             def save_edit():
@@ -929,7 +802,7 @@ def createTable(df):
 
             # Save button
             save_button = ttk.Button(
-                rootEdit, text="Salvar", command=save_edit, bootstyle="success"
+                rootEdit, text="Salvar", command=save_edit
             )
             save_button.pack(pady=10)
 
