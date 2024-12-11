@@ -78,14 +78,18 @@ def startLabAI(file_path, file_extension):
     try:
         if file_extension in ['.xlsx', '.xls']:
             df = pd.read_excel(file_path)
+            output.output(f"Lendo arquivo Excel localizado em {file_path}", outputFileW=outputFileW)
         else:
+            output.output(f"Lendo arquivo CSV localizado em {file_path}", outputFileW=outputFileW)
             df = pd.read_csv(file_path)
     except Exception as e:
+        output.output(f"Erro ao ler arquivo: {e}", outputFileW=outputFileW)
         tkinter.messagebox.showerror("Erro!", f"Erro: {e}")
     finally:
         label = ttk.Label(root, text="")
         dependent = ttk.Label(root, text="")
-        
+        output.output(f"Variáveis independentes: {list(df.columns[:-1])}", outputFileW=outputFileW)
+        output.output(f"Variável dependente: {df.columns[-1]}", outputFileW=outputFileW)
         label.config(text=os.path.basename(file_path))
         dependent.config(text="Variável dependente: " + df.columns[-1])
         placeButtons(df)
@@ -106,6 +110,7 @@ def change_reg_type(df: pd.DataFrame, typeReg="Regressão Linear", ntrabalhos=10
 
 
     if typeReg == "Regressão Linear":
+        output.output(f"Iniciando regressão linear\nn_jobs = {ntrabalhos}", outputFileW=outputFileW)
         model = LinearRegression(n_jobs=ntrabalhos)
         model.fit(X_train, y_train)
         coef = model.coef_
@@ -113,6 +118,7 @@ def change_reg_type(df: pd.DataFrame, typeReg="Regressão Linear", ntrabalhos=10
         equation = f"y = {coef}x + {intercept}"
         tools.entryconfig(index=4, state="normal")
     elif typeReg == "Regressão Polinomial":
+        output.output(f"Iniciando regressão polinomial\ndegree = {grau}", outputFileW=outputFileW)
         poly_features = PolynomialFeatures(degree=grau, include_bias=False)
         X_train_poly = poly_features.fit_transform(X_train)
         X_test_poly = poly_features.transform(X_test)
@@ -127,6 +133,7 @@ def change_reg_type(df: pd.DataFrame, typeReg="Regressão Linear", ntrabalhos=10
             equation += f' + ({coef:.3f} * {term})'
         tools.entryconfig(index=4, state="normal")
     elif typeReg == "Regressão de Suporte Vetorial":
+        output.output(f"Iniciando regressão de suporte vetorial\nkernel = {kernel}\nC = {c}\nepsilon = {epsilon}\ngamma = {gama}\ndegree = {grau} ", outputFileW=outputFileW)
         kernelGlobal = kernel
         model = SVR(kernel=kernel, C=c, epsilon=epsilon, gamma=gama, degree=grau)
         model.fit(X_train, y_train)
@@ -142,25 +149,25 @@ def change_reg_type(df: pd.DataFrame, typeReg="Regressão Linear", ntrabalhos=10
             tools.entryconfig(index=4, state="disabled")
 
     elif typeReg == "Regressão Elastic Net":
+        output.output(f"Iniciando regressão elastic net\nalpha = {alfa}\nl1_ratio = {proporcao_l1}\nmax_iter = {maxIterations}\ntol = {tolerancia})", outputFileW=outputFileW)
         model = ElasticNet(alpha=alfa, l1_ratio=proporcao_l1, max_iter=maxIterations, tol=tolerancia)        
         model.fit(X_train, y_train)
         equation = f"y = {model.coef_[0]}x + {model.intercept_}"
         tools.entryconfig(index=4, state="normal")
     elif typeReg == "Regressão Ridge":
+        output.output(f"Iniciando regressão elastic net\nalpha = {alfa}\nmax_iterations= {maxIterations}\nsolver= {solucionador}\ntol = {tolerancia})", outputFileW=outputFileW)
         model = Ridge(alpha=alfa, max_iter=maxIterations, solver=solucionador, tol=tolerancia)
         model.fit(X_train, y_train)
         equation = f"y = {model.coef_[0]}x + {model.intercept_}"
         tools.entryconfig(index=4, state="normal")
 
     elif typeReg == "Floresta Aleatória":
+        output.output(f"Iniciando regressão elastic net\nn_estimators = {n_estimadores}\nmax_depth = {max_depth}\nmin_samples_split = {min_amostras_divisao}\nmin_samples_leaf = {min_amostras_folha}\n random_state = {estado_aleatorio_RF}", outputFileW=outputFileW)
         model = RandomForestRegressor(n_estimators=n_estimadores, max_depth=max_depth,
                                       min_samples_split=min_amostras_divisao, min_samples_leaf=min_amostras_folha,
                                       random_state=estado_aleatorio_RF)
         model.fit(X_train, y_train)
         tools.entryconfig(index=4, state="disabled")
-    elif typeReg == "Regressão Logarítmica":
-        model = LinearRegression(n_jobs=ntrabalhos)
-        np.log(pd['x']).values.reshape(-1, 1)
 
 
 
@@ -277,7 +284,7 @@ def plot_spearman_heatmap(df):
     ax.set_title('Heatmap da Correlação de Spearman')
     ax.set_xticklabels(ax.get_xticklabels(), rotation=45, ha='right', color='white')  # Set the x-tick labels to white
     ax.set_yticklabels(ax.get_yticklabels(), rotation=0, color='white')  # Set the y-tick labels to white
-
+    plt.savefig("teste")
     # Display the figure in a Tkinter canvas
     canvas = FigureCanvasTkAgg(fig, master=root)
     canvas_widget = canvas.get_tk_widget()
@@ -661,13 +668,13 @@ def createTable(df):
             widget.configure(bootstyle="danger")
             return False
     rootTable = ttk.Toplevel(root)
-    rootTable.title("Tabela")
+    rootTable.title("LabAI - Tabela")
     rootTable.grid_columnconfigure(0, weight=1)
     rootTable.grid_rowconfigure(0, weight=1)
     def startTable(df):
         for widget in rootTable.winfo_children():
             widget.destroy()
-        columns = ["Número da Linha"] + [str(x) for x in df.columns]
+        columns = ["Número da Linha"] + list(df.columns)
 
         # Create a frame to hold the table and scrollbars
         table_frame = ttk.Frame(rootTable)
@@ -723,7 +730,7 @@ def createTable(df):
                 rootLog.destroy()
             rootLog = ttk.Toplevel(rootTable)
             vcmdf = (rootLog.register(validate_number_float), '%P', '%W')
-            rootLog.title("Aplicar logarítmo à coluna")
+            rootLog.title("LabAI - Aplicar logarítmo à coluna")
             rootLog.resizable(False, False)
             base = ttk.Entry(rootLog, validatecommand=vcmdf)
             baseLabel = ttk.Label(rootLog, text="Base do Logarítmo")

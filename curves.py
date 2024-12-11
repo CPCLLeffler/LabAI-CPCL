@@ -100,6 +100,7 @@ def curveFinder(df: pd.DataFrame):
 
     # Tkinter window setup
     rootCurve = ttk.Toplevel()
+    rootCurve.title("LabAI - Curvas")
 
     # Variables for selection
     selected_x = ttk.StringVar(value=df.columns[0])
