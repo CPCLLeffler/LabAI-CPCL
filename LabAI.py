@@ -77,6 +77,7 @@ def filedialog():
         startLabAI(file_path, file_extension)
 def startLabAI(file_path, file_extension):
     global df, label, dependent
+    output.output("\nDATASET\n", outputFileW=outputFileW)
     try:
         if file_extension in ['.xlsx', '.xls']:
             df = pd.read_excel(file_path)
@@ -109,7 +110,7 @@ def change_reg_type(df: pd.DataFrame, typeReg="Regressão Linear", ntrabalhos=10
     X = df.iloc[:, :-1]
     y = df.iloc[:, -1]
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0)
-
+    output.output("\nINFORMAÇÕES DA REGRESSÃO\n", outputFileW=outputFileW)
 
     if typeReg == "Regressão Linear":
         output.output(f"Iniciando regressão linear\nn_jobs = {ntrabalhos}", outputFileW=outputFileW)
@@ -157,14 +158,14 @@ def change_reg_type(df: pd.DataFrame, typeReg="Regressão Linear", ntrabalhos=10
         equation = f"y = {model.coef_[0]}x + {model.intercept_}"
         tools.entryconfig(index=4, state="normal")
     elif typeReg == "Regressão Ridge":
-        output.output(f"Iniciando regressão elastic net\nalpha = {alfa}\nmax_iterations= {maxIterations}\nsolver= {solucionador}\ntol = {tolerancia})", outputFileW=outputFileW)
+        output.output(f"Iniciando regressão ridge\nalpha = {alfa}\nmax_iterations= {maxIterations}\nsolver= {solucionador}\ntol = {tolerancia})", outputFileW=outputFileW)
         model = Ridge(alpha=alfa, max_iter=maxIterations, solver=solucionador, tol=tolerancia)
         model.fit(X_train, y_train)
         equation = f"y = {model.coef_[0]}x + {model.intercept_}"
         tools.entryconfig(index=4, state="normal")
 
     elif typeReg == "Floresta Aleatória":
-        output.output(f"Iniciando regressão elastic net\nn_estimators = {n_estimadores}\nmax_depth = {max_depth}\nmin_samples_split = {min_amostras_divisao}\nmin_samples_leaf = {min_amostras_folha}\n random_state = {estado_aleatorio_RF}", outputFileW=outputFileW)
+        output.output(f"Iniciando regressão floresta aleatória\nn_estimators = {n_estimadores}\nmax_depth = {max_depth}\nmin_samples_split = {min_amostras_divisao}\nmin_samples_leaf = {min_amostras_folha}\n random_state = {estado_aleatorio_RF}", outputFileW=outputFileW)
         model = RandomForestRegressor(n_estimators=n_estimadores, max_depth=max_depth,
                                       min_samples_split=min_amostras_divisao, min_samples_leaf=min_amostras_folha,
                                       random_state=estado_aleatorio_RF)
@@ -173,6 +174,7 @@ def change_reg_type(df: pd.DataFrame, typeReg="Regressão Linear", ntrabalhos=10
 
 
 
+    output.output("\nÍNDICES ESTATÍSTICOS\n", outputFileW=outputFileW)
 
 
     y_pred = model.predict(X_test)
@@ -297,6 +299,13 @@ root.title("LabAI")
 imagem = PhotoImage(file="media/github.png")
 root.geometry("1366x768")
 root.minsize(height=768, width=1366)
+def toggle_fullscreen(event=None):
+    if root.attributes("-fullscreen"):
+        root.attributes("-fullscreen", False)
+    else:
+        root.attributes("-fullscreen", True)
+root.bind('<Control-Return>', toggle_fullscreen)  
+root.bind('<F11>', toggle_fullscreen)  
 for i in range(40):
     root.grid_columnconfigure(i, weight=1)
     root.grid_rowconfigure(i//2, weight=1)
