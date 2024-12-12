@@ -85,7 +85,7 @@ jobs:
         run: mv ./dist/* ./LabAI-windows
 
       - name: Add media folder to artifact
-        run: cp -r ./media ./LabAI-windows/
+        run: cp -r ./media ./LabAI-windows/_internal
         
       - name: Add samples folder to root
         run: cp -r ./samples ./LabAI-windows/

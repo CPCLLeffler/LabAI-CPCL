@@ -75,7 +75,7 @@ def curveFinder(df: pd.DataFrame):
         # Generate predictions
         x_fit = np.linspace(x.min(), x.max(), 500)
         y_pred = fit_func(x_fit, *params)
-
+        
         # Create the plot
         fig, ax = plt.subplots(figsize=(8, 6))
         ax.set_facecolor("#002B36")
