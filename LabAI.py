@@ -306,6 +306,7 @@ def toggle_fullscreen(event=None):
         root.attributes("-fullscreen", True)
 root.bind('<Control-Return>', toggle_fullscreen)  
 root.bind('<F11>', toggle_fullscreen)  
+root.bind('<Control-w>', exit)
 for i in range(40):
     root.grid_columnconfigure(i, weight=1)
     root.grid_rowconfigure(i//2, weight=1)
