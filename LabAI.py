@@ -51,6 +51,8 @@ df: pd.DataFrame
 currentReg = None
 regType = ""
 equation = ""
+poly_features = None
+model = None
 
 def filedialog():
     global before, file_path,outputFileW, v
@@ -284,7 +286,6 @@ def plot_spearman_heatmap(df):
     ax.set_title('Heatmap da Correlação de Spearman')
     ax.set_xticklabels(ax.get_xticklabels(), rotation=45, ha='right', color='white')  # Set the x-tick labels to white
     ax.set_yticklabels(ax.get_yticklabels(), rotation=0, color='white')  # Set the y-tick labels to white
-    plt.savefig("teste")
     # Display the figure in a Tkinter canvas
     canvas = FigureCanvasTkAgg(fig, master=root)
     canvas_widget = canvas.get_tk_widget()
@@ -334,7 +335,7 @@ regressionMenu.add_command(label='Regressão Elastic Net', command=lambda: chang
 tools = ttk.Menu(menubar, tearoff=0)
 tools.add_command(label="Configurações do Modelo Atual", command=lambda: modelConfig())
 tools.add_command(label='Calculador de Erro', command=lambda: erro.erro())
-tools.add_command(label='Previsão', command=lambda: predict.previsao(df, regType))
+tools.add_command(label='Previsão', command=lambda: predict.previsao(df, regType, model, poly_features))
 tools.add_command(label="Tabela", command=lambda: createTable(df))
 tools.add_command(label='Equação', command=lambda: equationFile.equacao(equation))
 tools.add_command(label="Curvas", command=lambda: curves.curveFinder(df))
