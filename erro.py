@@ -7,7 +7,7 @@ def erroCalc():
         xcalculadoV = xcalculado.get("1.0", "end").strip()
         xmedidoV = eval(xmedidoV)
         xcalculadoV = eval(xcalculadoV)
-        erroV = (abs(((xmedidoV-xcalculadoV)/xmedidoV)))*100
+        erroV = 1 - (abs(((xmedidoV-xcalculadoV)/xmedidoV)))*100
         erroV = str(erroV)
         erroV += "%"
         resultTextboxErro.config(state="normal")

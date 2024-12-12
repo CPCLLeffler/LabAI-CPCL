@@ -69,7 +69,7 @@ def filedialog():
         if os.path.isfile(f"output/outputFile-{v}.txt"):
             v += 1
         else:
-            outputFileW = open(f"output/outputFile-{v}.txt", "a")
+            outputFileW = open(f"output/outputFile-{v}.txt", "a", encoding="utf-8")
             outputFileW.write(f"Data do output: {dt.datetime.now()}\n")
             break
     if file_path:
@@ -306,7 +306,6 @@ def toggle_fullscreen(event=None):
         root.attributes("-fullscreen", True)
 root.bind('<Control-Return>', toggle_fullscreen)  
 root.bind('<F11>', toggle_fullscreen)  
-root.bind('<Control-w>', exit)
 for i in range(40):
     root.grid_columnconfigure(i, weight=1)
     root.grid_rowconfigure(i//2, weight=1)

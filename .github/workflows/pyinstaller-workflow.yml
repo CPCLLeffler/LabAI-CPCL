@@ -42,6 +42,9 @@ jobs:
       - name: Add media folder to artifact
         run: cp -r ./media ./LabAI-ubuntu/_internal/
 
+      - name: Add samples folder to root
+        run: cp -r ./samples ./LabAI-ubuntu/
+
       - name: Compress artifact
         run: zip -r LabAI-ubuntu.zip ./LabAI-ubuntu
 
@@ -82,8 +85,11 @@ jobs:
         run: mv ./dist/* ./LabAI-windows
 
       - name: Add media folder to artifact
-        run: cp -r ./media ./LabAI-windows/_internal/
-
+        run: cp -r ./media ./LabAI-windows/
+        
+      - name: Add samples folder to root
+        run: cp -r ./samples ./LabAI-windows/
+      
       - name: Compress artifact
         run: powershell Compress-Archive -Path ./LabAI-windows/* -DestinationPath ./LabAI-windows.zip
 
@@ -133,6 +139,9 @@ jobs:
 
       - name: Add media folder to artifact
         run: cp -r ./media ./LabAI-macos/_internal/
+
+      - name: Add samples folder to root
+        run: cp -r ./samples ./LabAI-macos/
 
       - name: Compress artifact
         run: zip -r LabAI-macos.zip ./LabAI-macos

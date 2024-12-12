@@ -1,8 +1,10 @@
+import tkinter.messagebox
 import pandas as pd
 import numpy as np
 from scipy.optimize import curve_fit
 import matplotlib.pyplot as plt
 import ttkbootstrap as ttk
+import tkinter
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 def curveFinder(df: pd.DataFrame):
     canvasesCurve = []
@@ -12,6 +14,12 @@ def curveFinder(df: pd.DataFrame):
         if type == "Linear":
             a, b = params
             return a * x + b
+        elif type == "Exponencial (genérico)":
+            a, b = params
+            return a * b ** x
+        elif type == "Exponencial (constante de Euler)":
+            a, k = params
+            return a * np.exp(k * x)
         elif type == "Quadrática":
             a, b, c = params
             return a * x**2 + b * x + c
@@ -27,6 +35,7 @@ def curveFinder(df: pd.DataFrame):
         elif type == "Tangente":
             a, b = params
             return a * np.tan(b * x)
+
         else:
             a, b = params
             return a * x + b
@@ -47,6 +56,8 @@ def curveFinder(df: pd.DataFrame):
         param_count = {
             "Linear": 2,
             "Quadrática": 3,
+            "Exponencial (genérico)": 2, 
+            "Exponencial (constante de Euler)": 2,
             "Logarítmica": 2,
             "Senoide": 3,
             "Cosenoide": 3,
@@ -58,7 +69,7 @@ def curveFinder(df: pd.DataFrame):
             # Fit the data
             params, _ = curve_fit(fit_func, x, y, p0=initial_guess)
         except Exception as e:
-            print(f"Error in curve fitting: {e}")
+            tkinter.messagebox.showerror("Erro!", f"Erro ao encaixar curva (possivelmente os dados não encaixam o suficiente para determinar com este tipo de curva): {e}")
             return
 
         # Generate predictions
@@ -80,8 +91,8 @@ def curveFinder(df: pd.DataFrame):
         ax.title.set_color("#FFFFFF")
 
         # Plot the data
-        ax.scatter(x, y, c='yellow', label='Real Data')
-        ax.plot(x_fit, y_pred, label='Fitted Curve', color='red', lw=2)
+        ax.scatter(x, y, c='yellow', label='Dados reais')
+        ax.plot(x_fit, y_pred, label='Curva encaixada', color='red', lw=2)
         ax.set_xlabel(selected_x.get())
         ax.set_ylabel(df.columns[-1])
         ax.set_title(f"{selected_x.get()} vs {df.columns[-1]}")
@@ -93,6 +104,7 @@ def curveFinder(df: pd.DataFrame):
         canvasesCurve.append(canvas_widget)
         canvas_widget.grid(row=1, column=0, rowspan=18, columnspan=18, sticky='nsew')
         canvas.draw()
+
 
     def on_x_change(*args):
         # Update the plot on x-axis selection change
@@ -111,7 +123,7 @@ def curveFinder(df: pd.DataFrame):
     xType.grid(row=0, column=0)
 
     curveType = ttk.OptionMenu(
-        rootCurve, selected_curve, *["", "Linear", "Quadrática", "Logarítmica", "Senoide", "Cosenoide", "Tangente"], command=on_curve_type_change
+        rootCurve, selected_curve, *["", "Linear",  "Exponencial (genérico)", "Exponencial (constante de Euler)", "Quadrática", "Logarítmica", "Senoide", "Cosenoide", "Tangente"], command=on_curve_type_change
     )
     curveType.grid(row=0, column=1)
 
