@@ -6,7 +6,7 @@ a = Analysis(
     ['LabAI.py'],  
     pathex=[],
     binaries=[],
-    datas=[('LICENSE', '.')],
+    datas=[],
     hiddenimports=['PIL._tkinter_finder'],
     hookspath=[],
     runtime_hooks=[],

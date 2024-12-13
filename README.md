@@ -79,7 +79,3 @@ python3 LabAI.py
 ### OBSERVAÇÃO SOBRE A BUILD DE UBUNTU
 Não sei se funciona em distros não baseadas em Debian. Vou providenciar builds para outras distribuições.
 
-## LICENSA
-This project is licensed under the GNU General Public License v3.0. See the [LICENSE](./LICENSE) file for details.
-
-Usar o argumento '--license' quando executar o LabAI abrirá a licensa.
