@@ -98,8 +98,8 @@ def startLabAI(file_path, file_extension):
         label.config(text=os.path.basename(file_path))
         dependent.config(text="Variável dependente: " + df.columns[-1])
         placeButtons(df)
-        menubar.entryconfig(index=1, state="normal")
         menubar.entryconfig(index=2, state="normal")
+        menubar.entryconfig(index=3, state="normal")
 
 
 def change_reg_type(df: pd.DataFrame, typeReg="Regressão Linear", ntrabalhos=100, intercept=True, grau=1, alfa=1.0, maxIterations=1000,
