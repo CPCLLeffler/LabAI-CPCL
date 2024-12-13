@@ -52,8 +52,6 @@ parser.add_argument('--license', action='store_true', help='Show the license inf
 args = parser.parse_args()
 if args.license:
     os.open("LICENSE")
-    with open("LICENSE", mode="r") as license:
-        print(os.open("LICENSE"))
 # Initialize global variables used in functions
 os.chdir(os.path.dirname(__file__))
 polyKernelSettings = {"grau": float}
@@ -388,6 +386,7 @@ menubar.add_cascade(label="Arquivo", menu=arquivo)
 menubar.add_cascade(label="Configurações", menu=config)
 menubar.add_cascade(label="Ferramentas", menu=tools)
 menubar.add_cascade(label="Regressões", menu=regressionMenu)
+menubar.add_cascade(label="Ajuda", menu=ajuda)
 menubar.entryconfig(index=2, state="disabled")
 menubar.entryconfig(index=3, state="disabled")
 
