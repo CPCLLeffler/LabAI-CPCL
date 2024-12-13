@@ -50,8 +50,9 @@ import webbrowser
 parser = argparse.ArgumentParser(description="My Application")
 parser.add_argument('--license', action='store_true', help='Show the license information')
 args = parser.parse_args()
-if args.license:
-    os.open("LICENSE")
+if args.license:  # Garante que o caminho seja absoluto
+    webbrowser.open(f"file://{os.getcwd()}/LICENSE")
+    exit()
 # Initialize global variables used in functions
 os.chdir(os.path.dirname(__file__))
 polyKernelSettings = {"grau": float}
@@ -366,7 +367,7 @@ config.add_checkbutton(label="Tela Cheia", variable=root.attributes("-fullscreen
 # config.add_command(label="Comportamento do LabAI", command=lambda: behaviour.behaviour(root))
 # config.add_command(label="Caminhos", command=lambda: paths.paths(root))
 ajuda = ttk.Menu(menubar, tearoff=0)
-ajuda.add_command(label="Licensa (GPL v3.0)", command=lambda: os.open("LICENSE"))
+ajuda.add_command(label="Licensa (GPL v3.0)", command=lambda: webbrowser.open(f"file://{os.getcwd()}/LICENSE"))
 ajuda.add_command(label="GitHub", command=lambda: webbrowser.open("https://github.com/CPCLLeffler/LabAI-CPCL/"))
 regressionMenu = ttk.Menu(menubar, tearoff=0)
 regressionMenu.add_command(label='Regressão Linear', command=lambda: change_reg_type(df, typeReg="Regressão Linear"))
