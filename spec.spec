@@ -3,7 +3,7 @@
 block_cipher = None
 
 a = Analysis(
-    ['LabAI.py'],  # Replace 'main.py' with the path to your main script
+    ['LabAI.py'],  
     pathex=[],
     binaries=[],
     datas=[],
@@ -31,7 +31,7 @@ exe = EXE(
     upx=True,
     upx_exclude=[],
     runtime_tmpdir=None,
-    console=True  # Change to False if you want a windowed application
+    console=True 
 )
 
 coll = COLLECT(

@@ -36,7 +36,7 @@ O CPCL-LabAI é um software desenvolvido no Colégio Leffler, destinado a facili
 
 ## Roadmap
 
-- [ ] Adicionar botão para encontrar melhor \( R^2 \)
+- [ ] Adicionar botão para encontrar melhor R^2 
 - [ ] Salvar modelos de regressão em arquivos
 - [ ] Wiki na página do GitHub
 - [ ] Suporte Multi-língua
@@ -76,6 +76,10 @@ python3 LabAI.py
 [MacOS](https://nightly.link/CPCLLeffler/LabAI-CPCL/workflows/pyinstaller-workflow/main/LabAI-macos.zip)
 [Ubuntu](https://nightly.link/CPCLLeffler/LabAI-CPCL/workflows/pyinstaller-workflow/main/LabAI-ubuntu.zip)
 
-# OBSERVAÇÃO SOBRE A BUILD DE UBUNTU
+### OBSERVAÇÃO SOBRE A BUILD DE UBUNTU
 Não sei se funciona em distros não baseadas em Debian. Vou providenciar builds para outras distribuições.
 
+## LICENSA
+This project is licensed under the GNU General Public License v3.0. See the [LICENSE](./LICENSE) file for details.
+
+Usar o argumento '--license' quando executar o LabAI abrirá a licensa.

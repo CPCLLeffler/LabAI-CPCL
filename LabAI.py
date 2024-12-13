@@ -1,3 +1,19 @@
+
+# Copyright (C) 2024 Danilo Ivo
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program. If not, see <https://www.gnu.org/licenses/>.
+
 #internal imports
 import output
 import erro
@@ -8,6 +24,7 @@ import equationFile
 # import behaviour
 #internal imports
 import os
+import argparse
 import tkinter.messagebox
 import numpy as np
 import pandas as pd
@@ -30,6 +47,13 @@ import seaborn as sns
 import ttkbootstrap as ttk
 from ttkbootstrap.constants import *
 import webbrowser
+parser = argparse.ArgumentParser(description="My Application")
+parser.add_argument('--license', action='store_true', help='Show the license information')
+args = parser.parse_args()
+if args.license:
+    os.open("LICENSE")
+    with open("LICENSE", mode="r") as license:
+        print(os.open("LICENSE"))
 # Initialize global variables used in functions
 os.chdir(os.path.dirname(__file__))
 polyKernelSettings = {"grau": float}
@@ -343,6 +367,9 @@ config = ttk.Menu(menubar, tearoff=0)
 config.add_checkbutton(label="Tela Cheia", variable=root.attributes("-fullscreen"), command=lambda: toggle_fullscreen())
 # config.add_command(label="Comportamento do LabAI", command=lambda: behaviour.behaviour(root))
 # config.add_command(label="Caminhos", command=lambda: paths.paths(root))
+ajuda = ttk.Menu(menubar, tearoff=0)
+ajuda.add_command(label="Licensa (GPL v3.0)", command=lambda: os.open("LICENSE"))
+ajuda.add_command(label="GitHub", command=lambda: webbrowser.open("https://github.com/CPCLLeffler/LabAI-CPCL/"))
 regressionMenu = ttk.Menu(menubar, tearoff=0)
 regressionMenu.add_command(label='Regressão Linear', command=lambda: change_reg_type(df, typeReg="Regressão Linear"))
 regressionMenu.add_command(label='Regressão Polinomial', command=lambda: change_reg_type(df, typeReg="Regressão Polinomial"))
