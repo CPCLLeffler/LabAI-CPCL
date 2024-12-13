@@ -1,5 +1,4 @@
 <a id="readme-top"></a>
-[![LinkedIn][linkedin-shield]][linkedin-url]
 
 <br />
 <div align="center">
@@ -10,38 +9,65 @@
   <h3 align="center">CPCL-LabAI</h3>
 
   <p align="center">
-    Um projeto do Colégio Leffler de Machine Learning.
+    Um projeto inovador do Colégio Leffler para aplicar Machine Learning em sistemas físicos, facilitando o uso por pesquisadores e estudantes.
     <br />
     <br />
+    <a href="https://github.com/CPCLLeffler/LabAI-CPCL/issues">Relatar um problema</a> ·
+    <a href="https://github.com/CPCLLeffler/LabAI-CPCL/pulls">Contribuir</a>
   </p>
 </div>
 
 ## Sobre o Projeto
 
-![Captura de Tela do LabAI](https://i.imgur.com/UXizsET.png)
-### Compilado com PyInstaller
-[![PyInstaller](https://avatars.githubusercontent.com/u/1215332?s=280&v=4)](https://github.com/pyinstaller/pyinstaller)
+![Captura de Tela do LabAI](media/image.png)
+
+O CPCL-LabAI é um software desenvolvido no Colégio Leffler, destinado a facilitar a análise de dados experimentais por meio de algoritmos de Machine Learning. O software foi projetado para ser intuitivo, permitindo que pesquisadores e estudantes, mesmo sem um profundo conhecimento técnico, possam utilizar poderosas ferramentas de machine learning para modelagem e previsão.
+
+### Funcionalidades Principais:
+- **Interface Gráfica Intuitiva (GUI)**: Facilita o uso para todos os níveis de habilidade.
+- **Modelos de Machine Learning**: Implementação de regressões polinomiais, regressão linear, árvores de decisão, entre outros.
+- **Análise e Visualização de Dados**: Geração de gráficos e análise preditiva de sistemas físicos.
+- **Suporte a Dados Reais**: Validação usando experimentos reais, como o sistema massa-mola.
+
+### Compilado com:
+- [PyInstaller](https://github.com/pyinstaller/pyinstaller)
+
+![PyInstaller](https://avatars.githubusercontent.com/u/1215332?s=280&v=4)
 
 ## Roadmap
 
-- [ ] Adicionar botão para encontrar melhor R^2
-- [ ] Salvar regressão em arquivo
-- [ ] Wiki na página do Github
+- [ ] Adicionar botão para encontrar melhor \( R^2 \)
+- [ ] Salvar modelos de regressão em arquivos
+- [ ] Wiki na página do GitHub
 - [ ] Suporte Multi-língua
   - [ ] Inglês
+- [ ] Adicionar novos algoritmos de Machine Learning
 
-[Issues abertos](https://github.com/CPCLLeffler/LabAI-CPCL/issues)
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+## Como Usar
 
-<!-- CONTRIBUTING -->
-## Contribuindo
+## Alternativa 1: Baixar o código fonte
 
-1. 'Forqueie' o projeto
-2. Modifique o projeto no seu Fork
-3. Abra um Pull Request
+### 1. **Clonar o Repositório**
+Primeiro, clone o repositório para sua máquina local.
 
-[forks-shield]: https://img.shields.io/github/forks/othneildrew/Best-README-Template.svg?style=for-the-badge
-[forks-url]: https://github.com/CPCLLeffler/LabAI-CPCL/network/members
-[linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
-[linkedin-url]: https://br.linkedin.com/company/colegioleffler
+```bash
+git clone https://github.com/CPCLLeffler/LabAI-CPCL.git
+```
+### 2. **Instalar os Requisitos**
+```bash
+pip install -r requirements.txt
+```
+### 3. **Executar o arquivo LabAI.py**
+
+```bash
+python LabAI.py
+```
+ou
+```bash
+python3 LabAI.py
+```
+## Alternativa 2: Baixar a versão já compilada
+
+Estamos trabalhando em fornecer um link permanente com o download da build mais recente. Algumas são colocadas na página de Releases (majoritariamente as atualizações grandes). A build mais recente é feita automaticamente após o commit usando o GitHub Actions.
+Enquanto não temos um link permanente, use a [alternativa 1](#alternativa-1-baixar-o-código-fonte) ou use a versão pré-compilada na página de Releases.
