@@ -69,5 +69,13 @@ python3 LabAI.py
 ```
 ## Alternativa 2: Baixar a versão já compilada
 
-Estamos trabalhando em fornecer um link permanente com o download da build mais recente. Algumas são colocadas na página de Releases (majoritariamente as atualizações grandes). A build mais recente é feita automaticamente após o commit usando o GitHub Actions.
-Enquanto não temos um link permanente, use a [alternativa 1](#alternativa-1-baixar-o-código-fonte) ou use a versão pré-compilada na página de Releases.
+### Baixar as [builds não-experimentais](https://github.com/CPCLLeffler/LabAI-CPCL/releases)
+
+### Build mais recente (GitHub Actions):
+[Windows](https://nightly.link/CPCLLeffler/LabAI-CPCL/workflows/pyinstaller-workflow/main/LabAI-windows.zip)
+[MacOS](https://nightly.link/CPCLLeffler/LabAI-CPCL/workflows/pyinstaller-workflow/main/LabAI-macos.zip)
+[Ubuntu](https://nightly.link/CPCLLeffler/LabAI-CPCL/workflows/pyinstaller-workflow/main/LabAI-ubuntu.zip)
+
+# OBSERVAÇÃO SOBRE A BUILD DE UBUNTU
+Não sei se funciona em distros não baseadas em Debian. Vou providenciar builds para outras distribuições.
+

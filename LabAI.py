@@ -299,8 +299,12 @@ def plot_spearman_heatmap(df):
 root = ttk.Window(themename="solar")
 root.title("LabAI")
 imagem = PhotoImage(file="media/github.png")
-root.geometry("1366x768")
-root.minsize(height=768, width=1366)
+root.geometry(f"{root.winfo_screenwidth()}x{root.winfo_screenheight()}")
+root.minsize(height=900, width=1200)
+try:
+    root.state("zoomed")
+except:
+    pass
 def toggle_fullscreen(event=None):
     if root.attributes("-fullscreen"):
         root.attributes("-fullscreen", False)
