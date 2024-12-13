@@ -4,6 +4,8 @@ import erro
 import curves
 import predict
 import equationFile
+# import paths
+# import behaviour
 #internal imports
 import os
 import tkinter.messagebox
@@ -204,7 +206,7 @@ def change_reg_type(df: pd.DataFrame, typeReg="Regressão Linear", ntrabalhos=10
     output.output(correlacao_dependente, outputFileW=outputFileW)
     variavel_mais_influente = correlacao_dependente.idxmax()
     correlacao_maxima = correlacao_dependente.max()
-    output.output("Variável que mais influencia no alcance:", variavel_mais_influente, outputFileW=outputFileW)
+    output.output(f"Variável que mais influencia em {df.columns[-1]}:", variavel_mais_influente, outputFileW=outputFileW)
     output.output("Correlação máxima:", correlacao_maxima, outputFileW=outputFileW)
     plot(df)
     before = True
@@ -329,11 +331,14 @@ def modelConfig():
 
 # Add a button to switch between scatter plot and heatmap
 
-
 menubar = ttk.Menu(root)
 menubar.config(bg="#002B36", fg="#FFFFFF", activebackground="#013947", activeforeground="#FFFFFF")
 arquivo = ttk.Menu(menubar, tearoff=0)
 arquivo.add_command(label="Abrir", command=lambda: filedialog())
+config = ttk.Menu(menubar, tearoff=0)
+config.add_checkbutton(label="Tela Cheia", variable=root.attributes("-fullscreen"), command=lambda: toggle_fullscreen())
+# config.add_command(label="Comportamento do LabAI", command=lambda: behaviour.behaviour(root))
+# config.add_command(label="Caminhos", command=lambda: paths.paths(root))
 regressionMenu = ttk.Menu(menubar, tearoff=0)
 regressionMenu.add_command(label='Regressão Linear', command=lambda: change_reg_type(df, typeReg="Regressão Linear"))
 regressionMenu.add_command(label='Regressão Polinomial', command=lambda: change_reg_type(df, typeReg="Regressão Polinomial"))
@@ -349,10 +354,11 @@ tools.add_command(label="Tabela", command=lambda: createTable(df))
 tools.add_command(label='Equação', command=lambda: equationFile.equacao(equation))
 tools.add_command(label="Curvas", command=lambda: curves.curveFinder(df))
 menubar.add_cascade(label="Arquivo", menu=arquivo)
+menubar.add_cascade(label="Configurações", menu=config)
 menubar.add_cascade(label="Ferramentas", menu=tools)
 menubar.add_cascade(label="Regressões", menu=regressionMenu)
-menubar.entryconfig(index=1, state="disabled")
 menubar.entryconfig(index=2, state="disabled")
+menubar.entryconfig(index=3, state="disabled")
 
 
 def validate_number(new_value, widget_name):

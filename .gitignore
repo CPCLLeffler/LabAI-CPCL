@@ -3,3 +3,4 @@
 /.vscode
 /.tmp.driveupload
 /__pycache__
+config.yaml
