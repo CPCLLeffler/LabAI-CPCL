@@ -50,11 +50,11 @@ import webbrowser
 parser = argparse.ArgumentParser(description="My Application")
 parser.add_argument('--license', action='store_true', help='Show the license information')
 args = parser.parse_args()
+os.chdir(os.path.dirname(__file__))
 if args.license:  # Garante que o caminho seja absoluto
     webbrowser.open(f"file://{os.getcwd()}/LICENSE")
     exit()
 # Initialize global variables used in functions
-os.chdir(os.path.dirname(__file__))
 polyKernelSettings = {"grau": float}
 degree = 1
 kernelGlobal = "rbf"
