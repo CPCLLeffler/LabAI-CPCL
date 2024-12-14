@@ -1,4 +1,18 @@
 
+# Copyright (C) 2024 Danilo Ivo
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 #internal imports
 import output
@@ -36,9 +50,9 @@ import webbrowser
 parser = argparse.ArgumentParser(description="My Application")
 parser.add_argument('--license', action='store_true', help='Show the license information')
 args = parser.parse_args()
-# if args.license:  # Garante que o caminho seja absoluto
-#     webbrowser.open(f"file://{os.getcwd()}/LICENSE")
-#     exit()
+if args.license:  # Garante que o caminho seja absoluto
+    webbrowser.open(f"file://{os.getcwd()}/LICENSE")
+    exit()
 # Initialize global variables used in functions
 os.chdir(os.path.dirname(__file__))
 polyKernelSettings = {"grau": float}
@@ -353,7 +367,7 @@ config.add_checkbutton(label="Tela Cheia", variable=root.attributes("-fullscreen
 # config.add_command(label="Comportamento do LabAI", command=lambda: behaviour.behaviour(root))
 # config.add_command(label="Caminhos", command=lambda: paths.paths(root))
 ajuda = ttk.Menu(menubar, tearoff=0)
-# ajuda.add_command(label="Licensa (GPL v3.0)", command=lambda: webbrowser.open(f"file://{os.getcwd()}/LICENSE"))
+ajuda.add_command(label="Licensa (GPL v3.0)", command=lambda: webbrowser.open(f"file://{os.getcwd()}/LICENSE"))
 ajuda.add_command(label="GitHub", command=lambda: webbrowser.open("https://github.com/CPCLLeffler/LabAI-CPCL/"))
 regressionMenu = ttk.Menu(menubar, tearoff=0)
 regressionMenu.add_command(label='Regressão Linear', command=lambda: change_reg_type(df, typeReg="Regressão Linear"))
